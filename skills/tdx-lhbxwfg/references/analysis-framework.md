@@ -1,4 +1,4 @@
-﻿# 龙虎榜席位风格分析框架
+# 龙虎榜席位风格分析框架
 
 ## 表结构速记
 
@@ -67,7 +67,7 @@
 
 - 用 `tdx_quotes` 看当日涨跌幅、换手率和盘口强弱
 - 用 `tdx_kline` 看日线位置、量价和前高前低关系
-- 用 `wenda_news_query` 或 `wenda_notice_query` 看催化是否真实存在
+- 用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 或 `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")` 看催化是否真实存在 [已切换为 F10 替代方案]
 - 用 `tdx_screener` 看同题材是否形成梯队或扩散
 
 ## 写作纪律

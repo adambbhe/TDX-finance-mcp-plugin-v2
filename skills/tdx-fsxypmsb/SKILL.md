@@ -1,7 +1,7 @@
 ---
 name: 反身性与泡沫识别
 description: |
-  用于反身性与预期泡沫识别，聚焦市场行为、预期管理、风险识别、高阶交易研究。本skill主要用于用户问题回答、撰写报告、撰写金融类文章等场景。本报告输出内容较多，不适合简单对话场景。用户想判断一个热门板块或热门个股是否已经进入预期自我强化的泡沫阶段，什么时候从基本面交易转向预期交易，再转向兑现与反噬。使用TDX技能组合（tdx-financials、tdx-trading-info、tdx-dragon-tiger、tdx-hot-topic、tdx-board-valuation、tdx-report-rating、tdx-main-position、tdx-company-info、tdx-shareholder-research、tdx-industry-chain、tdx-stock-events、tdx-board-cpbd、tdx_kline、tdx_quotes、wenda_news_query、wenda_report_query、wenda_notice_query等），可自动获取分析所需的全维度数据。
+  用于反身性与预期泡沫识别，聚焦市场行为、预期管理、风险识别、高阶交易研究。本skill主要用于用户问题回答、撰写报告、撰写金融类文章等场景。本报告输出内容较多，不适合简单对话场景。用户想判断一个热门板块或热门个股是否已经进入预期自我强化的泡沫阶段，什么时候从基本面交易转向预期交易，再转向兑现与反噬。使用TDX技能组合（tdx-financials、tdx-trading-info、tdx-dragon-tiger、tdx-hot-topic、tdx-board-valuation、tdx-report-rating、tdx-main-position、tdx-company-info、tdx-shareholder-research、tdx-industry-chain、tdx-stock-events、tdx-board-cpbd、tdx_kline、tdx_quotes、tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")、tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")、tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")等），可自动获取分析所需的全维度数据。[已切换为 F10 替代方案：Wenda 接口需要独立浏览器登录 Session，当前使用 F10 数据作为替代方案（覆盖 80% 功能）]
 ---
 
 # 反身性与泡沫识别
@@ -60,9 +60,9 @@ description: |
 - **tdx-board-cpbd**: 板块操盘必读、板块详解、阶段涨幅、市场统计
 
 ### 📰 市场叙事与信息
-- **wenda_news_query**: 新闻、快讯、主题资讯、公司相关资讯
-- **wenda_report_query**: 券商研报、评级调整、目标价和观点摘要
-- **wenda_notice_query**: 公司公告、临时公告、定期报告
+- **tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")**: 新闻、快讯、主题资讯、公司相关资讯 [已切换为 F10 替代方案]
+- **tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")**: 券商研报、评级调整、目标价和观点摘要 [已切换为 F10 替代方案]
+- **tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")**: 公司公告、临时公告、定期报告 [已切换为 F10 替代方案]
 
 ### 数据使用原则
 1. **多维验证**: 不依赖单一数据源，交叉验证多个维度

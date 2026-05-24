@@ -103,16 +103,18 @@ function findBrowserCookiePaths() {
 // ============================================================
 
 async function readChromeCookies(dbPath) {
-  // Try to use better-sqlite3 first
+  // Use sql.js (pure JS, no native compilation issues)
   let sqlite3;
   try {
-    sqlite3 = require('better-sqlite3');
+    sqlite3 = require('sql.js');
+    console.log('     [OK] Using sql.js (pure JavaScript SQLite)');
   } catch(e) {
-    console.log('     [INFO] better-sqlite3 not found, trying sql.js...');
+    console.log('     [INFO] sql.js not found, trying better-sqlite3...');
     try {
-      sqlite3 = require('sql.js');
+      sqlite3 = require('better-sqlite3');
+      console.log('     [OK] Using better-sqlite3');
     } catch(e2) {
-      throw new Error('No SQLite library available. Run: npm install better-sqlite3');
+      throw new Error('No SQLite library available. Run: npm install sql.js');
     }
   }
   
@@ -124,36 +126,112 @@ async function readChromeCookies(dbPath) {
     fs.copyFileSync(dbPath, tempPath);
     
     let db;
-    if (sqlite3.name === 'better-sqlite3') {
-      db = new sqlite3(tempPath, { readonly: true });
+    const isSqlJs = typeof sqlite3 === 'function' || (sqlite3 && typeof sqlite3.Database === 'function');
+    
+    if (isSqlJs) {
+      // sql.js - pure JavaScript implementation
+      const SQL = await sqlite3();
+      const fileBuffer = fs.readFileSync(tempPath);
+      db = new SQL.Database(fileBuffer);  // Use constructor, not .load()
+      console.log('     [OK] Database opened with sql.js');
     } else {
-        // sql.js
-        const SQL = await sqlite3();
-        const fileBuffer = fs.readFileSync(tempPath);
-        db = await SQL.Database.load(fileBuffer);
-      }
+      // better-sqlite3
+      db = new sqlite3(tempPath, { readonly: true });
+      console.log('     [OK] Database opened with better-sqlite3');
+    }
     
     // Query TDX-related cookies
-    const rows = db.prepare?.(`
-      SELECT host_key, name, value, encrypted_value, 
-             path, expires_utc, is_secure, is_httponly,
-             samesite, source_port, source_scheme
-      FROM cookies 
-      WHERE host_key LIKE '%tdx%' OR host_key LIKE '%pul%'
-      ORDER BY host_key, name
-    `)?.all() || [];
+    let rows = [];
+    
+    if (isSqlJs) {
+      // sql.js API - first get total count for debugging
+      const debugStmt = db.prepare(`
+        SELECT host_key, COUNT(*) as cnt 
+        FROM cookies 
+        WHERE host_key LIKE '%tdx%' OR host_key LIKE '%pul%' OR host_key LIKE '%icfqs%'
+        GROUP BY host_key
+      `);
+      console.log('     [DEBUG] Searching for TDX domains in cookies table...');
+      
+      const debugRows = [];
+      while (debugStmt.step()) {
+        debugRows.push(debugStmt.getAsObject());
+        console.log(`       Found: ${debugRows[debugRows.length-1].host_key} (${debugRows[debugRows.length-1].cnt} cookies)`);
+      }
+      debugStmt.free();
+      
+      if (debugRows.length === 0) {
+        console.log('     [INFO] No TDX-related domains found. Listing top domains...');
+        const topStmt = db.prepare(`SELECT host_key, COUNT(*) as cnt FROM cookies GROUP BY host_key ORDER BY cnt DESC LIMIT 10`);
+        while (topStmt.step()) {
+          const row = topStmt.getAsObject();
+          console.log(`       ${row.host_key}: ${row.cnt} cookies`);
+        }
+        topStmt.free();
+      }
+      
+      // Now query actual data - use exact match first, then fallback to LIKE
+      let stmt;
+      
+      // Try exact domain match first
+      stmt = db.prepare(`
+        SELECT host_key, name, value, encrypted_value, 
+               path, expires_utc, is_secure, is_httponly,
+               samesite, source_port, source_scheme
+        FROM cookies 
+        WHERE host_key = '.tdx.com.cn' OR host_key = 'www.tdx.com.cn' 
+           OR host_key = 'pul.tdx.com.cn'
+        ORDER BY host_key, name
+      `);
+      rows = stmt.getAsObject({}) ? [stmt.getAsObject({})] : [];
+      
+      // Collect all rows
+      const allRows = [];
+      while (stmt.step()) {
+        allRows.push(stmt.getAsObject());
+      }
+      rows = allRows;
+      stmt.free();
+      
+      console.log(`     [DEBUG] Query returned ${rows.length} raw row(s)`);
+    } else {
+      // better-sqlite3 API
+      rows = db.prepare(`
+        SELECT host_key, name, value, encrypted_value, 
+               path, expires_utc, is_secure, is_httponly,
+               samesite, source_port, source_scheme
+        FROM cookies 
+        WHERE host_key LIKE '%tdx%' OR host_key LIKE '%pul%'
+        ORDER BY host_key, name
+      `).all() || [];
+    }
     
     for (const row of rows || []) {
       let value = null;
       
+      // Debug output
+      const hasPlaintext = row.value && row.value.length > 0;
+      const hasEncrypted = row.encrypted_value && row.encrypted_value.length > 0;
+      console.log(`       [COOKIE] ${row.name} @ ${row.host_key}: plaintext=${hasPlaintext ? row.value.length+'bytes' : 'none'}, encrypted=${hasEncrypted ? row.encrypted_value.length+'bytes' : 'none'}`);
+      
       // Prefer plaintext value
-      if (row.value && row.value.length > 0) {
+      if (hasPlaintext) {
         value = row.value.toString();
-      } else if (row.encrypted_value && row.encrypted_value.length > 0) {
+        console.log(`       ✅ Using plaintext value: ${value.substring(0, 20)}...`);
+      } else if (hasEncrypted) {
         // Try DPAPI decrypt on Windows
+        console.log(`       🔒 Attempting DPAPI decrypt (${row.encrypted_value.length} bytes)...`);
         try {
           value = await decryptDPAPI(row.encrypted_value);
-        } catch(e) {}
+          if (value && !value.startsWith('[ENCRYPTED:')) {
+            console.log(`       ✅ Decryption successful: ${value.substring(0, 20)}...`);
+          } else {
+            console.log(`       ⚠️ DPAPI decryption not available (needs elevated privileges)`);
+            value = null;
+          }
+        } catch(e) {
+          console.log(`       ❌ Decrypt failed: ${e.message}`);
+        }
       }
       
       if (value) {
@@ -169,8 +247,12 @@ async function readChromeCookies(dbPath) {
       }
     }
     
-    if (db.close) db.close();
-    else if (db.close) await db.close(); // sql.js
+    // Close database
+    if (isSqlJs) {
+      db.close();
+    } else {
+      db.close();  // better-sqlite3
+    }
     
     // Cleanup temp file
     try { fs.unlinkSync(tempPath); } catch(e) {}

@@ -115,9 +115,9 @@ tdx_screener message="<标准化的Query>" rang="ZS"
 **数据完整**: 直接格式化返回结果
 
 **需要扩展背景信息**:
-- 调用 `wenda_news_query` 获取相关资讯
+- 调用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 获取相关资讯
 - 调用 `tdx_quotes` 获取实时行情
-- 调用 `wenda_report_query` 获取研报观点
+- 调用 `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")` 获取研报观点
 
 ### 步骤 5: 格式化输出
 

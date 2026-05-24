@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-05-24T16:38:56.033Z",
+  "tests": {
+    "wenda": [
+      {
+        "name": "news/zx_query",
+        "status": 200,
+        "elapsed": 291,
+        "responseCode": 401,
+        "hasData": true
+      },
+      {
+        "name": "report/yb_query",
+        "status": 200,
+        "elapsed": 229,
+        "responseCode": 401,
+        "hasData": true
+      },
+      {
+        "name": "notice/gg_search",
+        "status": 200,
+        "elapsed": 267,
+        "responseCode": 401,
+        "hasData": true
+      }
+    ],
+    "f10_alternatives": [
+      {
+        "name": "F10-Event(sjcd)",
+        "status": 200,
+        "elapsed": 95,
+        "resultSets": 1,
+        "totalRows": 5
+      },
+      {
+        "name": "F10-Forecast(yzyq)",
+        "status": 200,
+        "elapsed": 105,
+        "resultSets": 4,
+        "totalRows": 275
+      },
+      {
+        "name": "F10-Warning(yjyg)",
+        "status": 200,
+        "elapsed": 79,
+        "resultSets": 1,
+        "totalRows": 0
+      },
+      {
+        "name": "F10-Topics(zttzbkz)",
+        "status": 200,
+        "elapsed": 81,
+        "resultSets": 1,
+        "totalRows": 11
+      }
+    ]
+  },
+  "verdict": {
+    "wendaWorking": 0,
+    "f10Working": 4,
+    "recommendation": "USE_F10_ALTERNATIVES"
+  }
+}

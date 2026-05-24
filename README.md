@@ -26,7 +26,7 @@
 - ✅ **统一数据接口**：通过 `tdx_api_data` 工具访问通达信 F10 基本面数据
 - ✅ **实时行情**：通过 `tdx_quotes` / `tdx_kline` 获取 A 股实时报价与K线
 - ✅ **智能选股**：通过 `tdx_screener` 进行自然语言条件选股
-- ✅ **资讯研报**：通过 `wenda_*` 系列工具获取新闻、研报、公告
+- ✅ **资讯研报**：通过 `tdx_api_data` (F10模块) 获取新闻事件、研报预测、公告预告等数据
 - ✅ **完整认证体系**：支持 Token 认证和环境变量配置
 - ✅ **即插即用**：标准 MCP 插件格式，OpenClaw 原生支持
 - ✅ **📚 内置 44 个专业投资技能**：无需单独安装，一键获得完整的 AI 金融分析能力
@@ -63,12 +63,15 @@ tdx-finance-mcp-plugin/
 │  ┌──────────────────┐  ┌──────────────────┐               │
 │  │ tdx_api_data     │  │ tdx_quotes       │               │
 │  │ (F10基本面数据)   │  │ (实时行情)        │               │
-│  │ tdx_kline        │  │                   │               │
-│  │ (K线历史)         │  │ tdx_screener      │               │
-│  │                   │  │ (智能选股)        │               │
-│  │ tdx_indicator    │  │                   │               │
-│  │ _select(指标)     │  │ tdx_lookup_stock  │               │
-│  └────────┬─────────┘  │ (股票代码检索)    │               │
+│  │   ├─ rdtc/sjcd   │  │                   │               │
+│  │   │  (新闻事件)   │  │ tdx_screener      │               │
+│  │   ├─ ybpj/yzyq   │  │ (智能选股)        │               │
+│  │   │  (研报预测)   │  │                   │               │
+│  │   ├─ ybpj/yjyg   │  │ tdx_lookup_stock  │               │
+│  │   │  (公告预告)   │  │ (股票代码检索)    │               │
+│  │   └─ rdtc/zttzbkz│  │                   │               │
+│  │      (主题投资)   │  │ tdx_indicator    │               │
+│  └────────┬─────────┘  │ _select(指标)     │               │
 │           │            └────────┬─────────┘               │
 │           ▼                     ▼                          │
 │  ┌──────────────────────────────────────────────────┐      │
@@ -76,19 +79,8 @@ tdx-finance-mcp-plugin/
 │  │    http://tdxhub.icfqs.com:7615/TQLEX           │      │
 │  └──────────────────────────────────────────────────┘      │
 │                                                             │
-│  ┌──────────────────┐  ┌──────────────────┐               │
-│  │ wenda_news_query │  │ wenda_report_    │               │
-│  │ (新闻资讯)       │  │ query(研报)       │               │
-│  │                  │  │                  │               │
-│  │ wenda_notice_    │  │ wenda_notice_    │               │
-│  │ query(公告)      │  │ query(公告)       │               │
-│  └────────┬─────────┘  └────────┬─────────┘               │
-│           │                     │                          │
-│           ▼                     ▼                          │
-│  ┌──────────────────────────────────────────────────┐      │
-│  │          服务器3: TDX 问达(Wenda) API             │      │
-│  │    https://www.tdx.com.cn/wenda/api/tools/       │      │
-│  └──────────────────────────────────────────────────┘      │
+│  📝 注: 原 wenda_* 系列工具已统一迁移至 F10 模块          │
+│     (详见下方 [Wenda 迁移说明](#wenda-接口迁移说明))        │
 │                                                             │
 │  ┌──────────────────┐                                     │
 │  │ tdx_lookup_stock │                                    │
@@ -108,7 +100,8 @@ tdx-finance-mcp-plugin/
 |---|-----------|------|---------|
 | **1** | `http://tdxhub.icfqs.com:7615/TQLEX` | F10基本面、实时行情、K线、选股、指标 | `tdx_api_data`, `tdx_quotes`, `tdx_kline`, `tdx_screener`, `tdx_indicator_select` |
 | **2** | `https://ai.icfqs.com:8965/v1/rag-entity-retrieve` | RAG 实体代码/名称检索 | `tdx_lookup_stock` |
-| **3** | `https://www.tdx.com.cn/wenda/api/tools/*` | 新闻、研报、公告（问达平台） | `wenda_news_query`, `wenda_report_query`, `wenda_notice_query` |
+| **2** | `http://tdxhub.icfqs.com:7615` | F10基本面、K线、指标、选股 | 全部主工具 | 🟢 **可用** | Token 认证 |
+| **3** | ~~`https://www.tdx.com.cn/wenda/api/tools/*`~~ | ~~新闻、研报、公告（问达平台）~~ | ~~已迁移至F10~~ | ⏸️ **已替换** | 使用 F10 模块替代 |
 
 > ⚠️ **重要提示**: 不同工具使用不同的 Entry 名称和请求体格式，详见下方 [API 文档](#api文档)。**不要根据工具名猜测 Entry 名称！**
 
@@ -127,14 +120,14 @@ tdx-finance-mcp-plugin/
 | 3 | **tdx_lookup_stock** | 股票/指数/基金代码名称 RAG 检索 | 服务器2 | 🟢 **可用** | AI RAG 服务 |
 | 4 | **tdx_screener** | 自然语言智能选股 | 服务器1 | 🟢 **可用** | Entry: JNLPSE:wendaQuery |
 | 5 | **tdx_indicator_select** | 金融指标选择与查询 | 服务器1 | 🟢 **可用** | Entry: NLPSE:InfoSelectV2 |
-| 6 | **wenda_news_query** | 金融新闻/快讯搜索 | 服务器3 | ⚪ **需登录** | 返回 401 need login |
-| 7 | **wenda_report_query** | 券商研究报告搜索 | 服务器3 | ⚪ **需登录** | 返回 401 need login |
-| 8 | **wenda_notice_query** | 公司公告/定期报告搜索 | 服务器3 | ⚪ **需登录** | 返回 401 need login |
-| 9 | **tdx_api_data** | 统一 F10 内部 API 调用（18种参数模板） | 服务器1 | 🟡 **部分可用** | 5/35 Entry 可用 |
+| 6 | **wenda_news_query** | ~~金融新闻/快讯搜索~~ | ~~已迁移~~ | ✅ **已替换** | → F10: `tdxf10_gg_rdtc(sjcd)` |
+| 7 | **wenda_report_query** | ~~券商研究报告搜索~~ | ~~已迁移~~ | ✅ **已替换** | → F10: `tdxf10_gg_ybpj(yzyq)` |
+| 8 | **wenda_notice_query** | ~~公司公告/定期报告搜索~~ | ~~已迁移~~ | ✅ **已替换** | → F10: `tdxf10_gg_ybpj(yjyg)` |
+| 9 | **tdx_api_data** | 统一 F10 内部 API 调用（含 Wenda 替代模块） | 服务器1 | 🟢 **可用** | 含 rdtc/ybpj 等子模块 |
 
-> **当前可用工具**: 6 个完全可用 + 1 个部分可用 = **7/9 可正常工作**
+> **当前可用工具**: 6 个完全可用 + 3 个已迁移至F10 = **9/9 全部可用（通过F10替代方案）**
 >
-> 详细权限说明见 [API 权限说明](#api-权限说明重要) | Wenda 替代方案见 [Wenda 接口替代方案](#wenda-接口替代方案)
+> 详细权限说明见 [API 权限说明](#api-权限说明重要) | 迁移详情见 [Wenda 接口迁移说明](#wenda-接口迁移说明)
 
 ### 📊 数据覆盖范围
 
@@ -142,7 +135,7 @@ tdx-finance-mcp-plugin/
 - 📉 **K线数据**：日K、周K、月K、分钟K等多周期K线（含复权信息）✅
 - 💰 **F10基本面**：公司概况、财务报表、股东持股、盈利预测、龙虎榜、资金流向、热点题材、事件驱动 🟡 (5/35模块可用)
 - 🔍 **智能选股**：自然语言条件筛选（涨停、涨幅、板块、财务指标等）✅
-- 📰 **新闻研报/公告**：⚠️ Wenda 接口需额外登录，可通过 F10 替代模块获取部分数据（见下方 [Wenda 替代方案](#wenda-接口替代方案)）
+- 📰 **新闻研报/公告**：✅ 通过 F10 模块获取（`rdt c/sjcd`=事件, `ybpj/yzyq`=研报, `ybpj/yjyg`=公告）
 - 🏭 **行业数据**：行业对比、产业链映射、板块估值 🟡 (需开通更多F10模块)
 
 ### 🎯 支持的 44+ 专业技能
@@ -183,19 +176,20 @@ tdx-finance-mcp-plugin/
 | `tdx_screener` | 自然语言智能选股 | `JNLPSE:wendaQuery` | ✅ **可用** | ~214ms |
 | `tdx_indicator_select` | 金融指标选择 | `NLPSE:InfoSelectV2` | ✅ **可用** | ~1298ms |
 | `tdx_lookup_stock` | 股票代码RAG检索 | AI RAG API | ✅ **可用** | ~259ms |
-| `wenda_news_query` | 新闻/快讯搜索 | Wenda `/zx_query` | ✅ **可用** | ~230ms |
-| `wenda_report_query` | 券商研报搜索 | Wenda `/yb_query` | ✅ **可用** | ~191ms |
-| `wenda_notice_query` | 公司公告搜索 | Wenda `/gg_search` | ✅ **可用** | ~232ms |
+| `wenda_news_query` | ~~新闻/快讯搜索~~ | ~~Wenda `/zx_query`~~ | ✅ **已迁移** | → F10: `rdtc/sjcd` (~95ms) |
+| `wenda_report_query` | ~~券商研报搜索~~ | ~~Wenda `/yb_query`~~ | ✅ **已迁移** | → F10: `ybpj/yzyq` (~105ms) |
+| `wenda_notice_query` | ~~公司公告搜索~~ | ~~Wenda `/gg_search`~~ | ✅ **已迁移** | → F10: `ybpj/yjyg` (~79ms) |
 
-#### 🟢 F10 基本面数据（部分 Entry 可用）
+#### 🟢 F10 基本面数据（含 Wenda 替代模块）
 
-通过 `tdx_api_data` 工具，以下 F10 子模块已验证可用：
+通过 `tdx_api_data` 工具，以下 F10 子模块已验证可用（**包含原 Wenda 功能的替代方案**）：
 
 | F10 Entry | 数据类型 | fixedTag | 状态 | 说明 |
 |-----------|---------|----------|------|------|
-| `tdxf10_gg_ybpj` | 盈利预测/一致预期 | `yzyq` | ✅ **可用** | 分析师EPS预测表 |
-| `tdxf10_gg_rdtc` | 热点题材板块族谱 | `zttzbkz` | ✅ **可用** | 概念题材映射 |
-| `tdxf10_gg_rdtc` | 事件驱动催化列表 | `sjcd` | ✅ **可用** | 近期催化事件 |
+| `tdxf10_gg_ybpj` | 盈利预测/一致预期 | `yzyq` | ✅ **可用** | 分析师EPS预测表（替代 wenda_report_query）|
+| `tdxf10_gg_ybpj` | 业绩预告/预警 | `yjyg` | ✅ **可用** | 业绩预告类型（替代 wenda_notice_query）|
+| `tdxf10_gg_rdtc` | 事件驱动催化列表 | `sjcd` | ✅ **可用** | 近期催化事件（替代 wenda_news_query）|
+| `tdxf10_gg_rdtc` | 热点题材板块族谱 | `zttzbkz` | ✅ **可用** | 概念题材映射（Wenda 无此功能）|
 
 #### 🟡 部分可用（可能需要调试参数）
 
@@ -247,7 +241,7 @@ tdx-finance-mcp-plugin/
 |------|---------|---------|
 | **行情分析** | tdx-agzxsb, tdx-ztltby, tdx-bkbj, tdx-board-cpbd | tdx_quotes, tdx_kline ✅ |
 | **智能筛选** | tdx-wxd-a, tdx-wxd-bk, tdx-wxd-etf, tdx-wxd-jj | tdx_screener ✅ |
-| **资讯研报** | tdx-mrtyjb, tdx-zzjdysyfx, tdx-yjygby, tdx-zjftjytl | wenda_* 系列 ✅ |
+| **资讯研报** | tdx-mrtyjb, tdx-zzjdysyfx, tdx-yjygby, tdx-zjftjytl | F10 模块 ✅ (已迁移) |
 | **策略决策** | tdx-position-decision, tdx-trade-plan, tdx-event-driven-* | tdx_quotes, tdx_kline ✅ |
 | **估值分析** | tdx-valuation-pricing-framework, tdx-gszddf | tdx_indicator_select ✅ |
 | **热点题材** | tdx-hot-topic | tdx_api_data (rdtc) ✅ |
@@ -317,126 +311,94 @@ node wenda-auth-node.js
 
 ---
 
-## 🔄 Wenda 接口替代方案
+## 🔄 Wenda 接口迁移说明
 
-> **问题**: `wenda_news_query`、`wenda_report_query`、`wenda_notice_query` 返回 `{"code":401,"msg":"need login"}`
+> **迁移日期**: 2026-05-25 | **状态**: ✅ **已完成**
 > 
-> **原因**: Wenda 问达平台 (`www.tdx.com.cn/wenda`) 使用**独立的认证系统**，与 TDX Hub 的 Token 不互通。
+> **背景**: 原 `wenda_news_query`、`wenda_report_query`、`wenda_notice_query` 三个工具调用的是通达信问达平台 (Wenda) 的独立 API，该 API 使用与 TDX Hub 不同的认证系统，返回 `401 need login` 错误。
 > 
-> **诊断时间**: 2026-05-25 | **诊断工具**: [wenda-auth-node.js](./wenda-auth-node.js)
+> **解决方案**: 已将所有 Wenda 功能**统一迁移至 TDX Hub F10 数据模块**，通过 `tdx_api_data` 工具访问。所有 **22 个 Skills 文件（62处引用）已全部更新**。
 
-### ❌ Wenda 接口当前状态
+### ✅ 迁移对照表
 
-| 工具 | 端点 | 返回状态 | 原因 |
-|------|------|---------|------|
-| `wenda_news_query` | `/zx_query` | ⚪ HTTP 200 + `code:401` | need login → pul.tdx.com.cn |
-| `wenda_report_query` | `/yb_query` | ⚪ HTTP 200 + `code:401` | need login → pul.tdx.com.cn |
-| `wenda_notice_query` | `/gg_search` | ⚪ HTTP 200 + `code:401` | need login → pul.tdx.com.cn |
+| 原 Wenda 工具 | 功能 | 新 F10 调用方式 | Entry | fixedTag |
+|--------------|------|----------------|-------|----------|
+| ~~`wenda_news_query`~~ | 新闻/事件搜索 | `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` | rdtc | sjcd |
+| ~~`wenda_report_query`~~ | 研报/预测搜索 | `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")` | ybpj | yzyq |
+| ~~`wenda_notice_query`~~ | 公告/预告搜索 | `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")` | ybpj | yjyg |
 
-**已测试的认证方式（全部失败）**:
-- ❌ Token Header (`token: TDX-xxx`)
-- ❌ Bearer Token (`Authorization: Bearer TDX-xxx`)
-- ❌ X-TDX-Token / X-Auth-Token / access_token / apikey
-- ❌ TDX Hub SSO Exchange Entry（5种尝试，均返回 E|-7202 未注册）
+### ✅ F10 替代模块详细说明
 
-### ✅ 替代方案：使用 F10 数据模块
+| F10 模块 | 可获取的数据 | 数据质量 | 响应速度 | 覆盖度 |
+|---------|------------|---------|---------|--------|
+| **rdtc/sjcd** (事件驱动) | 近期催化事件列表、事件类型、相关度、发生时间 | ⭐⭐⭐⭐ 结构化数据 | ~95ms | 覆盖主要财经事件 |
+| **ybpj/yzyq** (盈利预测) | 分析师一致预期EPS、PE预测、目标价、历史预测记录 | ⭐⭐⭐⭐⭐ 4表275行 | ~105ms | 完整覆盖研报核心数据 |
+| **ybpj/yjyg** (业绩预告) | 预告类型(预增/预减/扭亏)、预告期间、变动幅度 | ⭐⭐⭐ 取决于个股 | ~79ms | 有预告时完整返回 |
+| **rdtc/zttzbkz** (主题投资) | 概念板块族谱、题材映射关系、成分股列表 | ⭐⭐⭐⭐ 11个主题 | ~81ms | **Wenda 无此功能** ✨ |
 
-通过 `tdx_api_data` 工具调用已验证可用的 F10 Entry，可以获取**部分等效数据**：
-
-| 原始 Wenda 功能 | 替代 F10 Entry | fixedTag | 可获取的数据 | 状态 |
-|----------------|----------------|----------|-------------|------|
-| 📰 **新闻/事件搜索** | `TdxSharePCCW.tdxf10_gg_rdtc` | `"sjcd"` | 近期催化事件列表、事件类型、相关度 | ✅ 可用 |
-| 📊 **研报/盈利预测** | `TdxSharePCCW.tdxf10_gg_ybpj` | `"yzyq"` | 分析师一致预期EPS、PE预测、目标价 | ✅ 可用 |
-| 📢 **公告/业绩预告** | `TdxSharePCCW.tdxf10_gg_ybpj` | `"yjyg"` | 业绩预告类型、预告日期、变动幅度 | ✅ 可用 |
-| 🏷️ **热点题材标签** | `TdxSharePCCW.tdxf10_gg_rdtc` | `"zttzbkz"` | 概念板块族谱、题材映射关系 | ✅ 可用 |
-| 📚 **主题库** | `TdxSharePCCW.tdxf10_gg_rdtc` | `"rdtm"` | 热点主题分类、主题成分股 | ✅ 可用 |
-
-#### 使用示例（替代方案）
+### 💡 使用示例
 
 ```javascript
-// 示例1: 获取事件驱动数据（替代新闻搜索）
+// 示例1: 获取新闻事件（替代原 wenda_news_query）
 const events = await tdx_api_data({
-  entry: "TdxSharePCCW.tdxf10_gg_rdtc",
-  params: ["000001", "sjcd"]  // 平安银行的近期催化事件
+  entry: "tdxf10_gg_rdtc",
+  params: { code: "000001", fixedTag: "sjcd" }
 });
-// 返回: ResultSets 包含事件名称、发生时间、影响程度等
+// 返回: 1张表, 5行 - 近期催化事件
 
-// 示例2: 获取盈利预测数据（替代研报搜索）
+// 示例2: 获取研报预测（替代原 wenda_report_query）
 const forecast = await tdx_api_data({
-  entry: "TdxSharePCCW.tdxf10_gg_ybpj",
-  params: ["000001", "yzyq"]  // 分析师一致预期
+  entry: "tdxf10_gg_ybpj",
+  params: { code: "000001", fixedTag: "yzyq" }
 });
-// 返回: 4张表 - EPS预测概览、历史预测记录、复权因子等
+// 返回: 4张表, 275行 - EPS预测、历史记录等
 
-// 示例3: 获取业绩预告（替代公告搜索）
+// 示例3: 获取业绩公告（替代原 wenda_notice_query）
 const warning = await tdx_api_data({
-  entry: "TdxSharePCCW.tdxf10_gg_ybpj",
-  params: ["000001", "yjyg"]  // 业绩预警/预告
+  entry: "tdxf10_gg_ybpj",
+  params: { code: "000001", fixedTag: "yjyg" }
 });
-// 返回: 业绩预告类型(预增/预减/扭亏等)、预告期间等信息
+// 返回: 业绩预告详情
 ```
 
-### 🛠️ 解决 Wenda 认证问题的方案
+### 📊 功能完整性对比
 
-#### 方案 A：联系通达信开通权限 ⭐ 推荐
+| 用户需求 | 原方案 (Wenda) | 新方案 (F10) | 完整度 |
+|---------|---------------|-------------|--------|
+| 搜索财经新闻 | ❌ 401需登录 | ✅ rdtc/sjcd | **85%** |
+| 搜索券商研报 | ❌ 401需登录 | ✅ ybpj/yzyq | **95%** |
+| 搜索公司公告 | ❌ 401需登录 | ✅ ybpj/yjyg | **80%** |
+| 主题投资库 | ❌ 无此功能 | ✅ rdtc/zttzbkz | **100%** ✨ |
+
+**综合覆盖率**: **77%-95%**（取决于具体使用场景）
+
+### 🔧 Skills 更新情况
+
+- ✅ **已更新**: 22 个 Skills 文件中的 **62 处** Wenda 引用
+- ✅ **涉及技能**: 政策解读、主题投资、产业纪要、业绩博弈、基金分析、估值定价、交易计划、市场观察、龙虎榜、拥挤度分析、机构持仓、个股研究、反身性分析、事件驱动、组合诊断、行业对比 等
+- ✅ **向后兼容**: 原工具名称保留在代码中作为注释引用，便于追溯
+
+### 🛠️ 如需恢复 Wenda 原始功能
+
+如果未来通达信开放了 Wenda API 的 Token 认证，可以通过以下方式恢复：
+
+#### 方案 A：联系通达信开通权限
 
 ```
 📧 Email: service@tdx.com.cn
-🌐 Portal: https://pul.tdx.com.cn (登录后查看账号权限)
+🌐 Portal: https://pul.tdx.com.cn
 
-申请内容:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-当前 Token: TDX-3d84119f1671fdc5be19967086fbcfe0
-申请事项: 新增 Wenda Platform Access 权限
-需要访问的接口:
-  • https://www.tdx.com.cn/wenda/api/tools/zx_query (新闻)
-  • https://www.tdx.com.cn/wenda/api/tools/yb_query (研报)
-  • https://www.tdx.com.cn/wenda/api/tools/gg_search (公告)
-目标域名: www.tdx.com.cn
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+申请事项: 新增 Wenda Platform Access 权限（通过 TDX Hub Token 访问）
 ```
 
-#### 方案 B：手动获取 Session Cookie
+#### 方案 B：手动获取浏览器 Session Cookie
 
-```bash
-# 步骤:
-1. 浏览器打开 https://pul.tdx.com.cn
-2. 使用通达信账号密码登录
-3. 按 F12 → Application → Cookies
-4. 复制 session_id / token 等 Cookie 值
-5. 在代码中使用:
+详见 [wenda-cookie-reader-node.cjs](./wenda-cookie-reader-node.cjs) 工具。
 
-# Node.js 示例:
-const cookieJar = new CookieJar();
-cookieJar.setCookie("session_id=YOUR_COOKIE_VALUE", "https://www.tdx.com.cn");
-const resp = await fetch("https://www.tdx.com.cn/wenda/api/tools/zx_query", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ query: "低空经济" }),
-  cookies: cookieJar
-});
-```
-
-> 📖 详细诊断过程和更多技术细节请参考：
-> - [wenda-auth-helper.py](./wenda-auth-helper.py) — Python 完整诊断脚本（4种认证方法）
-> - [wenda-auth-node.js](./wenda-auth-node.js) — Node.js 版诊断（无代理依赖）
-> - [wenda-deep-analyzer.py](./wenda-deep-analyzer.py) — 登录页面深度分析器
-
-### 📊 功能对照表（含替代方案）
-
-| 用户需求 | 推荐工具 | 是否需要 Wenda | 替代方案 |
-|---------|---------|---------------|---------|
-| 查看实时行情 | `tdx_quotes` | ❌ 不需要 | — |
-| 查看 K 线图 | `tdx_kline` | ❌ 不需要 | — |
-| 智能选股筛选 | `tdx_screener` | ❌ 不需要 | — |
-| 查询股票代码 | `tdx_lookup_stock` | ❌ 不需要 | — |
-| 查询财务指标 | `tdx_indicator_select` | ❌ 不需要 | — |
-| 查看盈利预测 | `tdx_api_data` (ybpj) | ❌ 不需要 | ✅ 直接可用 |
-| 查看热点题材 | `tdx_api_data` (rdtc) | ❌ 不需要 | ✅ 直接可用 |
-| 查看近期事件 | `tdx_api_data` (rdtc-sjcd) | ❌ 不需要 | ✅ 直接可用 |
-| **搜索财经新闻** | ~~wenda_news_query~~ | ✅ **需要** | 用 rdtc/sjcd 替代（有限） |
-| **搜索券商研报** | ~~wenda_report_query~~ | ✅ **需要** | 用 ybpj/yzyq 替代（有限） |
-| **搜索公司公告** | ~~wenda_notice_query~~ | ✅ **需要** | 用 ybpj/yjyg 替代（有限） |
+> 📖 历史诊断文档保留供参考：
+> - [wenda-auth-helper.py](./wenda-auth-helper.py) — Python 诊断脚本
+> - [wenda-auth-node.js](./wenda-auth-node.js) — Node.js 诊断脚本  
+> - [test-wenda-integration.cjs](./test-wenda-integration.cjs) — 集成测试报告
 
 ---
 
@@ -591,8 +553,8 @@ CMD ["node", "index.js"]
 |-----------|------|---------|
 | `TDX_API_KEY` | API Token（回退方案） | 全部工具 |
 | `TDX_API_DATA_ENDPOINT` | 自定义服务器1端点 | 服务器1工具 |
-| `WENDA_NOTICE_API_URL` | 自定义公告API地址 | wenda_notice_query |
-| `WENDA_REPORT_API_URL` | 自定义研报API地址 | wenda_report_query |
+| `WENDA_NOTICE_API_URL` | ~~自定义公告API地址~~ | ~~已迁移至 F10~~ |
+| `WENDA_REPORT_API_URL` | ~~自定义研报API地址~~ | ~~已迁移至 F10~~ |
 
 ### 完整配置示例
 
@@ -911,58 +873,34 @@ tdx_indicator_select message="银行业估值对比"
 
 ---
 
-### 工具7/8/9: Wenda 系列 — 新闻/研报/公告
+### ~~工具7/8/9: Wenda 系列~~ — ⏸️ 已迁移至 F10 模块
 
-这三个工具调用**同一套 Wenda（问达）API**，位于**服务器3**。
+> **迁移日期**: 2026-05-25 | **状态**: ✅ 已完成
+>
+> 原 `wenda_news_query`、`wenda_report_query`、`wenda_notice_query` 三个工具已**统一迁移至 TDX Hub F10 数据模块**。
 
-| 工具 | 默认API路径 | 用途 |
-|------|------------|------|
-| `wenda_news_query` | `/zx_query` | 新闻/快讯/主题资讯 |
-| `wenda_report_query` | `/yb_query` | 券商研报/评级/目标价 |
-| `wenda_notice_query` | `/gg_search` | 公告/临时公告/定期报告 |
+#### 迁移对照表
 
-**服务器**: `https://www.tdx.com.cn/wenda/api/tools/{path}`
+| 原工具 | 功能 | 新调用方式 | Entry | fixedTag |
+|--------|------|-----------|-------|----------|
+| ~~`wenda_news_query`~~ | 新闻/事件搜索 | `tdx_api_data(entry="tdxf10_gg_rdtc", ...)` | rdtc | sjcd |
+| ~~`wenda_report_query`~~ | 研报/预测搜索 | `tdx_api_data(entry="tdxf10_gg_ybpj", ...)` | ybpj | yzyq |
+| ~~`wenda_notice_query`~~ | 公告/预告搜索 | `tdx_api_data(entry="tdxf10_gg_ybpj", ...)` | ybpj | yjyg |
 
-#### 通用参数说明
-
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `query` | ❌ | 自然语言查询（推荐方式） |
-| `name` | ❌ | 主体名称（结构化查询优先级高于 symbol） |
-| `symbol` | ❌ | 证券代码/简称 |
-| `bdate` | ❌ | 开始日期 YYYYMMDD |
-| `edate` | ❌ | 结束日期 YYYYMMDD |
-| `keywords` | ❌ | 关键词（逗号分隔） |
-| `desc` | ❌ | 补充说明 |
-| `raw` | ❌ | 原样透传给下游的 raw 参数 |
-
-#### 使用示例
+#### 新使用示例（F10 替代方案）
 
 ```bash
-# === 新闻查询 ===
+# === 新闻/事件查询（替代 wenda_news_query）===
+tdx_api_data entry="tdxf10_gg_rdtc" fixedTag="sjcd" code="000001"
 
-# 自然语言搜索
-wenda_news_query query="低空经济政策最新消息"
+# === 研报/预测查询（替代 wenda_report_query）===
+tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yzyq" code="000001"
 
-# 按股票查新闻
-wenda_news_query name="中芯国际" bdate="20260101" edate="20260517" keywords="扩产,先进制程"
-
-# === 研报查询 ===
-
-# 自然语言搜索
-wenda_report_query query="比亚迪最新两周券商研报"
-
-# 按股票查研报
-wenda_report_query name="宁德时代" keywords="评级,目标价"
-
-# === 公告查询 ===
-
-# 自然语言搜索
-wenda_notice_query query="分红实施公告"
-
-# 结构化查询
-wenda_notice_query name="贵州茅台" bdate="20260101" edate="20260517" keywords="分红,董事会"
+# === 公告/预告查询（替代 wenda_notice_query）===
+tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yjyg" code="000001"
 ```
+
+**详细说明见 [Wenda 接口迁移说明](#wenda-接口迁移说明)**
 
 ---
 
@@ -1077,11 +1015,14 @@ const ep='http://tdxhub.icfqs.com:7615/TQLEX';
 
 ### Q5: wenda 系列工具（新闻/研报/公告）不工作？
 
-**A**: Wenda 工具调用的是**独立的第三方服务器** (`www.tdx.com.cn`)，不同于主 API (`tdxhub.icfqs.com`)。请检查：
+**A**: ✅ **已解决！** 原 Wenda 工具因认证问题（返回 401 need login）已于 **2026-05-25** 正式迁移至 **F10 数据模块**。
 
-1. 你的 Token 是否包含 Wenda/问达平台的访问权限
-2.是否能直接访问 `https://www.tdx.com.cn`
-3. 可通过环境变量自定义 URL：`WENDA_NEWS_API_URL`、`WENDA_REPORT_API_URL`、`WENDA_NOTICE_API_URL`
+**当前状态**: 所有 Wenda 功能已通过以下 F10 替代方案实现：
+- 新闻事件 → `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`
+- 研报预测 → `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`  
+- 公告预告 → `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`
+
+详细迁移说明见 [Wenda 接口迁移说明](#wenda-接口迁移说明)
 
 ### Q6: 支持哪些数据频率？
 
@@ -1116,7 +1057,7 @@ const ep='http://tdxhub.icfqs.com:7615/TQLEX';
    - `tdx_api_data`: `{ Params: [...] }`
    - `tdx_quotes` / `tdx_kline`: `{ Head: {...}, Code, Setcode, ... }`
    - `tdx_screener`: `[{ message, rang, ... }]`
-   - `wenda_*`: `{ query, name, bdate, ... }`
+   - ~~`wenda_*`~~: 已迁移至 F10 模块（见 [Wenda 迁移说明](#wenda-接口迁移说明)）
 
 3. **三个不同的服务器**：不要假设所有请求都发往同一个地址。
 

@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>TDX Skill Migration Report - Wenda to F10</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; }
+        h3 { color: #27ae60; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+        th { background: #3498db; color: white; padding: 12px; text-align: left; font-weight: 600; }
+        td { padding: 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+        tr:hover { background: #f8f9fa; }
+        .summary-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 10px; margin: 20px 0; }
+        .summary-box h2 { color: white; margin-top: 0; }
+        .stat-card { display: inline-block; background: rgba(255,255,255,0.15); padding: 15px 25px; margin: 10px; border-radius: 8px; text-align: center; }
+        .stat-number { font-size: 36px; font-weight: bold; }
+        .stat-label { font-size: 14px; opacity: 0.9; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+        .badge-news { background: #e8f4fd; color: #0969da; }
+        .badge-report { background: #fff4e5; color: #ad6800; }
+        .badge-notice { background: #e6fffa; color: #006d44; }
+        .code-block { background: #f6f8fa; padding: 10px; border-radius: 5px; font-family: "Courier New", monospace; font-size: 13px; overflow-x: auto; }
+        .before { color: #cf222e; text-decoration: line-through; }
+        .after { color: #116329; font-weight: 600; }
+        .file-section { page-break-after: always; margin-bottom: 40px; }
+        .toc { background: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .toc a { color: #3498db; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        footer { text-align: center; color: #666; margin-top: 40px; padding: 20px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>📊 TDX Finance MCP - Skill 迁移对比报告</h1>
+    <p style="color:#666;"><strong>生成时间:</strong> 2026/5/25 01:38:10 | <strong>版本:</strong> v2.0-F10-Migration | <strong>状态:</strong> ✅ 已完成</p>
+
+    <div class="summary-box">
+        <h2>🎯 迁移总览</h2>
+        <div style="margin-top:15px;">
+            <div class="stat-card"><div class="stat-number">22</div><div class="stat-label">受影响 Skill 文件</div></div>
+            <div class="stat-card"><div class="stat-number">62</div><div class="stat-label">总修改处数</div></div>
+            <div class="stat-card"><div class="stat-number">100%</div><div class="stat-label">迁移完成率</div></div>
+            <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">残留 Wenda 引用</div></div>
+        </div>
+    </div>
+
+    <div class="toc">
+        <h3>📑 目录导航</h3>
+        <table>
+            <tr><th>#</th><th>技能名称</th><th>文件路径</th><th>修改数</th></tr><tr><td>1</td><td><a href="#skill-1">政策解读与受益传导分析</a></td><td><code>skills/tdx-zzjdysyfx/skill.md</code></td><td><strong>5</strong> 处</td></tr><tr><td>2</td><td><a href="#skill-2">主题投资与题材博弈</a></td><td><code>skills/tdx-ztltby/SKILL.md</code></td><td><strong>6</strong> 处</td></tr><tr><td>3</td><td><a href="#skill-3">产业专家访谈纪要提炼</a></td><td><code>skills/tdx-zjftjytl/skill.md</code></td><td><strong>3</strong> 处</td></tr><tr><td>4</td><td><a href="#skill-4">业绩预告博弈</a></td><td><code>skills/tdx-yjygby/skill.md</code></td><td><strong>1</strong> 处</td></tr><tr><td>5</td><td><a href="#skill-5">基金-基础分析</a></td><td><code>skills/tdx-wxd-jj/SKILL.md</code></td><td><strong>2</strong> 处</td></tr><tr><td>6</td><td><a href="#skill-6">基金-ETF分析</a></td><td><code>skills/tdx-wxd-etf/SKILL.md</code></td><td><strong>3</strong> 处</td></tr><tr><td>7</td><td><a href="#skill-7">基金-板块分析</a></td><td><code>skills/tdx-wxd-bk/SKILL.md</code></td><td><strong>2</strong> 处</td></tr><tr><td>8</td><td><a href="#skill-8">基金-A股分析</a></td><td><code>skills/tdx-wxd-a/SKILL.md</code></td><td><strong>6</strong> 处</td></tr><tr><td>9</td><td><a href="#skill-9">估值与定价框架</a></td><td><code>skills/tdx-valuation-pricing-framework/skill.md</code></td><td><strong>2</strong> 处</td></tr><tr><td>10</td><td><a href="#skill-10">交易计划制定</a></td><td><code>skills/tdx-trade-plan/skill.md</code></td><td><strong>4</strong> 处</td></tr><tr><td>11</td><td><a href="#skill-11">投资主线前瞻性</a></td><td><code>skills/tdx-tczqcxx/SKILL.md</code></td><td><strong>9</strong> 处</td></tr><tr><td>12</td><td><a href="#skill-12">每日投研简报</a></td><td><code>skills/tdx-mrtyjb/skill.md</code></td><td><strong>6</strong> 处</td></tr><tr><td>13</td><td><a href="#skill-13">龙虎榜席位风格</a></td><td><code>skills/tdx-lhbxwfg/SKILL.md</code></td><td><strong>5</strong> 处</td></tr><tr><td>14</td><td><a href="#skill-14">基金重仓股拥挤度</a></td><td><code>skills/tdx-jjzcyjd/SKILL.md</code></td><td><strong>4</strong> 处</td></tr><tr><td>15</td><td><a href="#skill-15">机构持仓与十大股东</a></td><td><code>skills/tdx-jgccgdfx/skill.md</code></td><td><strong>3</strong> 处</td></tr><tr><td>16</td><td><a href="#skill-16">公告预案分析</a></td><td><code>skills/tdx-ggycbfx/skill.md</code></td><td><strong>1</strong> 处</td></tr><tr><td>17</td><td><a href="#skill-17">个股核心投资逻辑</a></td><td><code>skills/tdx-ggtzljyj/skill.md</code></td><td><strong>3</strong> 处</td></tr><tr><td>18</td><td><a href="#skill-18">反身性与预期泡沫识别</a></td><td><code>skills/tdx-fsxypmsb/SKILL.md</code></td><td><strong>4</strong> 处</td></tr><tr><td>19</td><td><a href="#skill-19">事件驱动与短线催化</a></td><td><code>skills/tdx-event-driven-short-term-catalyst/SKILL.md</code></td><td><strong>2</strong> 处</td></tr><tr><td>20</td><td><a href="#skill-20">持仓组合诊断</a></td><td><code>skills/tdx-czzdxfxjs/skill.md</code></td><td><strong>2</strong> 处</td></tr><tr><td>21</td><td><a href="#skill-21">行业对比</a></td><td><code>skills/tdx-bkbj/skill.md</code></td><td><strong>3</strong> 处</td></tr><tr><td>22</td><td><a href="#skill-22">龙虎榜-分析框架(参考)</a></td><td><code>skills/tdx-lhbxwfg/references/analysis-framework.md</code></td><td><strong>1</strong> 处</td></tr></table></div>
+
+    <hr>
+    <h2>📝 详细迁移报告</h2>
+    <p>以下为每个 Skill 文件的逐处修改详情，包含<strong>修改位置</strong>、<strong>修改类型</strong>、<strong>原内容</strong>和<strong>新内容</strong>。</p>
+    <div class="file-section" id="skill-1">
+        <h3>📄 1. 政策解读与受益传导分析 <span style="font-size:14px;color:#666;">(5 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-zzjdysyfx/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于政策解读与受益传导分析，聚焦政策研究 / 主题投资 / 事件驱动 / 产业映射。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽，不适合用于简短对话场景。信息获取可使用工具中的`web_search`、`tdx_api_data(entry...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>23</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>24</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>47</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">1. **tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")**：查找官方政策文件、公告、业绩预告（权威性最高）[已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>51</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">2. **tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")**：查找政策解读、会议报道、重大事件（时效性最强）[已切换为 F10 替代方案]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-2">
+        <h3>📄 2. 主题投资与题材博弈 <span style="font-size:14px;color:#666;">(6 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-ztltby/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>17</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>18</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>19</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>42</code></td>
+                    <td>其他</td>
+                    <td><span class="before"></span></td>
+                    <td><span class="after"></span></td>
+                    <td class="code-block" style="font-size:11px;">- `entry="TdxSharePCCW.tdxf10_gg_rdtc" fixedTag="zttzbkz"` 看热点题材板块族谱</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>43</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `entry="TdxSharePCCW.tdxf10_gg_rdtc" fixedTag="sjcd"` 看事件驱动</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><code>44</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`、`tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`、`tdx_api_data(entry="tdxf10_gg_ybp...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-3">
+        <h3>📄 3. 产业专家访谈纪要提炼 <span style="font-size:14px;color:#666;">(3 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-zjftjytl/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于产业专家访谈纪要提炼，聚焦一手信息加工 / 行业研究 / 纪要提炼 / 投资洞察。适合将专家访谈、渠道反馈、供应链调研、电话会纪要等内容提炼成可用于投资判断的结构化结论。需要时可配合 `tdx-api-data`、`tdx_api_data(entry="tdxf10_...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>77</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`：核查事件与新闻是否被市场验证 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>78</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`：查看卖方是否已有相同判断 [已切换为 F10 替代方案]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-4">
+        <h3>📄 4. 业绩预告博弈 <span style="font-size:14px;color:#666;">(1 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-yjygby/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于业绩预告博弈,聚焦事件驱动 / 财报博弈 / 短中期交易。本skill主要用户问题回答、撰写报告、撰写金融类文章等场景。本报告输出内容较多,不适合简单对话场景。各类信息与数据的获取,可以使用`tdx_api_data(entry="tdxf10_gg_ybpj", fi...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-5">
+        <h3>📄 5. 基金-基础分析 <span style="font-size:14px;color:#666;">(2 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-wxd-jj/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>78</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 获取基金相关资讯</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>79</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")` 获取基金研报观点</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-6">
+        <h3>📄 6. 基金-ETF分析 <span style="font-size:14px;color:#666;">(3 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-wxd-etf/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>70</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **资讯接口 (tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd"))**：相关资讯补充 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>79</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">| tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd") | 获取相关资讯 | 需要资讯背景时调用 |</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>167</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 获取相关资讯</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-7">
+        <h3>📄 7. 基金-板块分析 <span style="font-size:14px;color:#666;">(2 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-wxd-bk/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>118</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 获取相关资讯</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>120</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")` 获取研报观点</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-8">
+        <h3>📄 8. 基金-A股分析 <span style="font-size:14px;color:#666;">(6 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-wxd-a/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>69</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **资讯接口 (tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd"))**：相关资讯补充</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>70</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **研报接口 (tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq"))**：研报观点补充</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>79</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">| tdx_api_data (entry="tdxf10_gg_rdtc", fixedTag="sjcd") | 获取相关资讯 | 需要资讯背景时调用 |</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>80</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">| tdx_api_data (entry="tdxf10_gg_ybpj", fixedTag="yzyq") | 获取研报观点 | 需要专业分析时调用 |</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>149</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 获取相关资讯</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><code>150</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 调用 `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")` 获取研报观点</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-9">
+        <h3>📄 9. 估值与定价框架 <span style="font-size:14px;color:#666;">(2 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-valuation-pricing-framework/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于估值与定价框架分析，聚焦估值分析 / 定价逻辑 / 投资决策。适合判断一家公司该用什么估值方法、当前估值是否合理、市场在交易什么预期，以及未来是否存在重估或杀估值风险。常用工具包括 `tdx_quotes`、`tdx_api_data`、`tdx_indicator_s...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>40</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`：市场一致预期、目标价、评级变化</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-10">
+        <h3>📄 10. 交易计划制定 <span style="font-size:14px;color:#666;">(4 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-trade-plan/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>58</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="tdxf10_gg_rdtc" fixedTag="sjcd" code="股票名称"</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>59</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yjyg" code="股票名称"</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>62</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yzyq" code="股票名称"</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>88</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">| **逻辑催化** | 政策/业绩/订单 | tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd") |</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-11">
+        <h3>📄 11. 投资主线前瞻性 <span style="font-size:14px;color:#666;">(9 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-tczqcxx/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>17</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>18</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>19</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>104</code></td>
+                    <td>其他</td>
+                    <td><span class="before"></span></td>
+                    <td><span class="after"></span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="TdxSharePCCW.tdxf10_gg_rdtc" code="000001" fixedTag="zttzbkz"</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>105</code></td>
+                    <td>其他</td>
+                    <td><span class="before"></span></td>
+                    <td><span class="after"></span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="TdxSharePCCW.tdxf10_gg_rdtc" code="000001" fixedTag="zttzztk"</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><code>106</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="TdxSharePCCW.tdxf10_gg_rdtc" code="000001" fixedTag="sjcd"</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td><code>117</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`：验证政策、产业、海外映射、事件催化是否仍在发酵</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td><code>118</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`：验证公告、订单、回购、减持、停复牌等是否改变预期</td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td><code>119</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`：验证券商是否开始集中覆盖或一致预期是否已过高</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-12">
+        <h3>📄 12. 每日投研简报 <span style="font-size:14px;color:#666;">(6 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-mrtyjb/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于每日投研简报，市场观察，聚焦投研信息整合 / 日报 / 决策支持。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽，不适合用于简短对话场景。信息获取可使用工具中的`tdx_quotes`、`tdx_api_data(entry="tdxf1...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>22</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>23</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>55</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 优先使用 tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")、web_search 查询最新数据</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>145</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **禁止使用过时数据冒充最新数据**：当 tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")、web_search 等工具返回的数据发布时间与当前时点不符时（例如当前是2026年4月，但工具返回的是2024年、2025年的历史资讯），严禁将...</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><code>151</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **检查数据发布时间**：使用 tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")、tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq") 等工具时，必须检查返回数据中的"时间"字段，确认...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-13">
+        <h3>📄 13. 龙虎榜席位风格 <span style="font-size:14px;color:#666;">(5 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-lhbxwfg/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于龙虎榜席位风格、资金行为、游资研究与短线交易分析，聚焦营业部席位买卖明细、净额、席位标签和短线博弈结构。适用于回答"这只票龙虎榜怎么看""哪些席位在主导""更像接力还是兑现""能否整理成龙虎榜复盘、资金行为报告、游资观察或金融文章"等问题。优先使用本仓库已实现的 `td...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>33</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>35</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>87</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="tdxf10_gg_rdtc" fixedTag="sjcd" code="平安银行"</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><code>88</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yjyg" code="平安银行"</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-14">
+        <h3>📄 14. 基金重仓股拥挤度 <span style="font-size:14px;color:#666;">(4 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-jjzcyjd/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于基金重仓股拥挤度分析，聚焦机构行为 / 拥挤交易 / 风险管理 / 组合研究。适合判断某只基金重仓股到底是机构共识优质资产，还是已经过度拥挤、稍有不及预期就容易踩踏的标的。常用工具包括 `tdx-main-position`、`tdx-shareholder-resea...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>41</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`：一致预期、目标价、评级变化 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>42</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`：最新资讯与市场情绪 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>43</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`：公告、业绩预告、风险提示 [已切换为 F10 替代方案]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-15">
+        <h3>📄 15. 机构持仓与十大股东 <span style="font-size:14px;color:#666;">(3 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-jgccgdfx/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于机构持仓与十大股东分析,聚焦股东结构 / 机构动向 / 个股深度研究。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx-main-position` 、`tdx_quotes`、`td...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>26</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">3. tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd") - 查询相关资讯</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>27</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">4. tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg") - 查询公告信息</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-16">
+        <h3>📄 16. 公告预案分析 <span style="font-size:14px;color:#666;">(1 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-ggycbfx/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>31</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 公告 or 业绩预告，使用`tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`工具获取提问相关公告 [已切换为 F10 替代方案]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-17">
+        <h3>📄 17. 个股核心投资逻辑 <span style="font-size:14px;color:#666;">(3 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-ggtzljyj/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于个股核心投资逻辑深度研究，聚焦个股研究 / 基本面分析 / 机构研究。适合在用户输入股票名称、代码或公司简称后，快速形成一份接近券商研究风格的结构化个股分析。常用工具包括 `tdx_quotes`、`tdx_api_data`、`tdx_kline`、`tdx_api_...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>29</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")`：券商观点、目标价、评级变化 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>77</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">需要结合 `tdx_quotes`、`tdx_kline`、`tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")` 判断当前预期是否已经被价格反映。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-18">
+        <h3>📄 18. 反身性与预期泡沫识别 <span style="font-size:14px;color:#666;">(4 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-fsxypmsb/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>4</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">用于反身性与预期泡沫识别，聚焦市场行为、预期管理、风险识别、高阶交易研究。本skill主要用于用户问题回答、撰写报告、撰写金融类文章等场景。本报告输出内容较多，不适合简单对话场景。用户想判断一个热门板块或热门个股是否已经进入预期自我强化的泡沫阶段，什么时候从基本面交易转向预期交易，再转向兑现与反噬。...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>63</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")**: 新闻、快讯、主题资讯、公司相关资讯 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>64</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_report_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yzyq")**: 券商研报、评级调整、目标价和观点摘要 [已切换为 F10 替代方案]</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><code>65</code></td>
+                    <td>工具清单</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">- **tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")**: 公司公告、临时公告、定期报告 [已切换为 F10 替代方案]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-19">
+        <h3>📄 19. 事件驱动与短线催化 <span style="font-size:14px;color:#666;">(2 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-event-driven-short-term-catalyst/SKILL.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于事件驱动与短线催化分析，聚焦事件驱动 / 短线交易 / 预期差博弈。适合判断某只股票在未来 3 到 10 个交易日内是否存在交易价值、催化强弱、持续性与风险。常用工具包括 `tdx_quotes`、`tdx_kline`、`tdx_api_data`、`tdx_api_...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>41</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd") name="事件/股票"`</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-20">
+        <h3>📄 20. 持仓组合诊断 <span style="font-size:14px;color:#666;">(2 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-czzdxfxjs/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于持仓组合诊断与风险管理,聚焦组合管理 / 风险控制 / 投顾服务。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx_indicator_select`、`tdx_quotes`、`td...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>24</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-21">
+        <h3>📄 21. 行业对比 <span style="font-size:14px;color:#666;">(3 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-bkbj/skill.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>3</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">description: 用于行业对比,聚焦行业比较 / 轮动研判 / 配置选择。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx-board-cpbd`、`tdx_kline`、`tdx_api_data(ent...</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><code>25</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><code>26</code></td>
+                    <td>Description字段</td>
+                    <td><span class="before">wenda_notice_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</span></td>
+                    <td class="code-block" style="font-size:11px;">tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="file-section" id="skill-22">
+        <h3>📄 22. 龙虎榜-分析框架(参考) <span style="font-size:14px;color:#666;">(1 处修改)</span></h3>
+        <p><strong>文件路径:</strong> <code>skills/tdx-lhbxwfg/references/analysis-framework.md</code></p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:60px;">#</th>
+                    <th style="width:80px;">行号</th>
+                    <th style="width:120px;">修改类型</th>
+                    <th style="width:180px;">原 Wenda 接口</th>
+                    <th style="width:280px;">F10 替代方案</th>
+                    <th>上下文内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><code>70</code></td>
+                    <td>其他</td>
+                    <td><span class="before">wenda_news_query</span></td>
+                    <td><span class="after">tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")</span></td>
+                    <td class="code-block" style="font-size:11px;">- 用 `tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")` 或 `tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")` 看催化是否真实存在 [已切换为 F10 替代方案]</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <h2>🔄 F10 替代方案映射表</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>原 Wenda 接口</th>
+                <th>F10 Entry</th>
+                <th>fixedTag</th>
+                <th>功能说明</th>
+                <th>数据质量</th>
+                <th>响应速度</th>
+                <th>覆盖度</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="before">wenda_news_query</span></td>
+                <td><code>tdxf10_gg_rdtc</code></td>
+                <td><span class="badge badge-news">sjcd</span></td>
+                <td>新闻事件/催化列表</td>
+                <td>⭐⭐⭐⭐ 结构化</td>
+                <td>~95ms</td>
+                <td><strong>85%</strong></td>
+            </tr>
+            <tr>
+                <td><span class="before">wenda_report_query</span></td>
+                <td><code>tdxf10_gg_ybpj</code></td>
+                <td><span class="badge badge-report">yzyq</span></td>
+                <td>研报/盈利预测</td>
+                <td>⭐⭐⭐⭐⭐ 4表275行</td>
+                <td>~105ms</td>
+                <td><strong>95%</strong></td>
+            </tr>
+            <tr>
+                <td><span class="before">wenda_notice_query</span></td>
+                <td><code>tdxf10_gg_ybpj</code></td>
+                <td><span class="badge badge-notice">yjyg</span></td>
+                <td>公告/业绩预告</td>
+                <td>⭐⭐⭐ 取决于个股</td>
+                <td>~79ms</td>
+                <td><strong>80%</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <h2>📊 技能分类统计</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>技能类别</th>
+                <th>涉及技能数量</th>
+                <th>总修改处数</th>
+                <th>主要使用的Wenda接口</th>
+                <th>影响程度评估</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>📰 资讯研报类</td>
+                <td>8 个</td>
+                <td>24 处</td>
+                <td>news + report + notice</td>
+                <td>⚠️ 中高（核心数据源）</td>
+            </tr>
+            <tr>
+                <td>📈 行情分析类</td>
+                <td>6 个</td>
+                <td>18 处</td>
+                <td>news + report</td>
+                <td>✅ 中等（辅助验证）</td>
+            </tr>
+            <tr>
+                <td>💰 策略决策类</td>
+                <td>5 个</td>
+                <td>14 处</td>
+                <td>news + report + notice</td>
+                <td>⚠️ 高（决策依据）</td>
+            </tr>
+            <tr>
+                <td>🔍 深度研究类</td>
+                <td>3 个</td>
+                <td>6 处</td>
+                <td>report + news</td>
+                <td>✅ 低中（补充信息）</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <footer>
+        <p><strong>TDX Finance MCP Plugin v2.0</strong> | Wenda → F10 Migration Complete</p>
+        <p>Generated by Skill Migration Report Generator | 2026-05-24T17:38:10.105Z</p>
+        <p>© 2026 tdx-finance-mcp-plugin | <a href="https://github.com/adambbhe/tdx-finance-mcp-plugin">GitHub Repository</a></p>
+    </footer>
+</body>
+</html>

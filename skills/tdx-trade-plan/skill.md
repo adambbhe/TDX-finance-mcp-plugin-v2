@@ -55,11 +55,11 @@ tdx_indicator_select(message="股票名称 股东指标")
 
 **资讯验证（确认催化）：**
 # 利好新闻
-wenda_news_query(name="股票名称", keywords=利好,业绩,订单)
-wenda_notice_query(name="股票名称", keywords=业绩,公告)
+tdx_api_data entry="tdxf10_gg_rdtc" fixedTag="sjcd" code="股票名称"
+tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yjyg" code="股票名称"
 
 # 研报观点
-wenda_report_query(name="股票名称", keywords=买入,目标价)
+tdx_api_data entry="tdxf10_gg_ybpj" fixedTag="yzyq" code="股票名称"
 
 ---
 
@@ -85,7 +85,7 @@ wenda_report_query(name="股票名称", keywords=买入,目标价)
 
 | 依据 | 具体信号 | 数据来源 |
 |------|---------|---------|
-| **逻辑催化** | 政策/业绩/订单 | wenda_news_query |
+| **逻辑催化** | 政策/业绩/订单 | tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd") |
 | **趋势结构** | 突破/回踩/反转 | K线形态 |
 | **量价配合** | 放量上涨/缩量回调 | Volume vs Amount |
 | **市场环境** | 大盘/板块支持 | 指数联动 |

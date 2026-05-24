@@ -1,6 +1,6 @@
 ---
 name: 持仓诊断与风险检视
-description: 用于持仓组合诊断与风险管理,聚焦组合管理 / 风险控制 / 投顾服务。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx_indicator_select`、`tdx_quotes`、`tdx_kline`和`wenda_news_query`,通过合理的关键词或关键词组合进行调用。用户将当前持仓发送后,希望了解组合是否存在隐患、风险敞口在哪里、仓位配置是否合理。
+description: 用于持仓组合诊断与风险管理,聚焦组合管理 / 风险控制 / 投顾服务。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx_indicator_select`、`tdx_quotes`、`tdx_kline`和`tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`,通过合理的关键词或关键词组合进行调用。[已切换为 F10 替代方案：Wenda 接口需要独立浏览器登录 Session，当前使用 F10 数据作为替代方案（覆盖 80% 功能）]用户将当前持仓发送后,希望了解组合是否存在隐患、风险敞口在哪里、仓位配置是否合理。
 ---
 
 # 持仓诊断与风险检视
@@ -21,7 +21,7 @@ description: 用于持仓组合诊断与风险管理,聚焦组合管理 / 风险
 tdx_indicator_select
 tdx_quotes
 tdx_kline
-wenda_news_query
+tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")
 
 ## 输出结构
 1. 组合概况

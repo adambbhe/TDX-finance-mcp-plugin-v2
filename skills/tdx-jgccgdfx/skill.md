@@ -1,6 +1,6 @@
 ---
 name: 机构持仓股东分析
-description: 用于机构持仓与十大股东分析,聚焦股东结构 / 机构动向 / 个股深度研究。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx-main-position` 、`tdx_quotes`、`wenda_news_query`和`wenda_notice_query`,通过合理的关键词或关键词组合进行调用。用户希望通过十大股东、机构持仓、持股集中度变化,判断:资金进出方向、筹码稳定程度、机构对中长期逻辑的认可度。
+description: 用于机构持仓与十大股东分析,聚焦股东结构 / 机构动向 / 个股深度研究。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx-main-position` 、`tdx_quotes`、`tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`和`tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`,通过合理的关键词或关键词组合进行调用。[已切换为 F10 替代方案：Wenda 接口需要独立浏览器登录 Session，当前使用 F10 数据作为替代方案（覆盖 80% 功能）]用户希望通过十大股东、机构持仓、持股集中度变化,判断:资金进出方向、筹码稳定程度、机构对中长期逻辑的认可度。
 ---
 
 # 机构持仓股东分析
@@ -23,8 +23,8 @@ description: 用于机构持仓与十大股东分析,聚焦股东结构 / 机构
 **优先使用工具**:
 1. **tdx-main-position** (通过 tdx_api_date) - 获取详细的机构持仓数据
 2. tdx_quotes - 获取实时行情和财务数据
-3. wenda_news_query - 查询相关资讯
-4. wenda_notice_query - 查询公告信息
+3. tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd") - 查询相关资讯
+4. tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg") - 查询公告信息
 
 **⚠️ 重要提示**:
 - **必须优先使用 tdx-main-position** (tdx_api_date) 获取机构持仓数据

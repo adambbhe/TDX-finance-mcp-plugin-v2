@@ -1,6 +1,6 @@
 ---
 name: 板块比较
-description: 用于行业对比,聚焦行业比较 / 轮动研判 / 配置选择。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx-board-cpbd`、`tdx_kline`、`wenda_news_query`、`wenda_notice_query`,通过合理的关键词或关键词组合进行调用。用户在两个或多个板块之间犹豫时使用,例如:算力 vs CPO,机器人 vs AI应用,券商 vs 保险,消费电子 vs 半导体。帮助判断哪个更强、哪个更具性价比、哪个更适配当前阶段。
+description: 用于行业对比,聚焦行业比较 / 轮动研判 / 配置选择。本技能适用于用户问题回答、报告撰写、金融类内容输出等场景。由于报告内容较为详尽,不适合用于简短对话场景。信息获取可使用工具中的`tdx-board-cpbd`、`tdx_kline`、`tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")`、`tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")`,通过合理的关键词或关键词组合进行调用。[已切换为 F10 替代方案：Wenda 接口需要独立浏览器登录 Session，当前使用 F10 数据作为替代方案（覆盖 80% 功能）]用户在两个或多个板块之间犹豫时使用,例如:算力 vs CPO,机器人 vs AI应用,券商 vs 保险,消费电子 vs 半导体。帮助判断哪个更强、哪个更具性价比、哪个更适配当前阶段。
 ---
 
 # 板块比较
@@ -22,8 +22,8 @@ description: 用于行业对比,聚焦行业比较 / 轮动研判 / 配置选择
 ## 调用tool
 tdx-board-cpbd
 tdx_kline
-wenda_news_query
-wenda_notice_query
+tdx_api_data(entry="tdxf10_gg_rdtc", fixedTag="sjcd")
+tdx_api_data(entry="tdxf10_gg_ybpj", fixedTag="yjyg")
 
 
 ## 输出结构
