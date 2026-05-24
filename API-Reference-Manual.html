@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>TDX Finance MCP Plugin - API Reference Manual</title>
+  <style>
+    body { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; margin: 20px; background: #f5f5f5; }
+    h1 { color: #1a73e8; border-bottom: 3px solid #1a73e8; padding-bottom: 10px; }
+    h2 { color: #333; margin-top: 40px; padding: 10px; background: #e8f0fe; border-left: 4px solid #1a73e8; }
+    h3 { color: #555; margin-top: 25px; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    th { background: #1a73e8; color: white; padding: 12px 10px; text-align: left; font-size: 13px; }
+    td { padding: 10px; border-bottom: 1px solid #e0e0e0; font-size: 12px; vertical-align: top; }
+    tr:hover { background: #f8f9fa; }
+    .tool-id { font-weight: bold; color: #1a73e8; }
+    .status-ok { color: #0d9e4f; font-weight: bold; }
+    .status-warn { color: #e37400; font-weight: bold; }
+    .status-err { color: #d93025; font-weight: bold; }
+    .code-block { background: #f1f3f4; padding: 8px 12px; border-radius: 4px; font-family: Consolas, monospace; font-size: 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+    .field-path { font-family: Consolas, monospace; color: #1a73e8; }
+    .type-string { color: #0d9e4f; }
+    .type-number { color: #d93025; }
+    .type-array { color: #e37400; }
+    .type-object { color: #5f6368; }
+    .summary-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .summary-box h3 { color: white; margin-top: 0; }
+    .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0; }
+    .info-item { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 6px; }
+    .info-label { font-size: 11px; opacity: 0.8; }
+    .info-value { font-size: 16px; font-weight: bold; margin-top: 4px; }
+    @media print { body { background: white; } table { page-break-inside: avoid; } }
+  </style>
+</head>
+<body>
+
+<h1>📊 TDX Finance MCP Plugin - API Reference Manual</h1>
+<p><strong>Version:</strong> 2026.4.28 | <strong>Generated:</strong> <span id="genTime"></span> | <strong>Token:</strong> TDX-3d84119f... (Tested)</p>
+
+<div class="summary-box">
+  <h3>📈 Summary Overview</h3>
+  <div class="info-grid">
+    <div class="info-item"><div class="info-label">Total Tools</div><div class="info-value">9</div></div>
+    <div class="info-item"><div class="info-label">Available</div><div class="info-value">6 (67%)</div></div>
+    <div class="info-item"><div class="info-label">Need Auth</div><div class="info-value">3 (33%)</div></div>
+    <div class="info-item"><div class="info-label">API Servers</div><div class="info-value">3</div></div>
+    <div class="info-item"><div class="info-label">Avg Response</div><div class="info-value">~150ms</div></div>
+    <div class="info-item"><div class="info-label">Rate Limit</div><div class="info-value">≥10 concurrent</div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- TOOL 1: tdx_quotes -->
+<!-- ============================================================ -->
+<h2 id="tool1">Tool #1: <span class="tool-id">tdx_quotes</span> — 实时行情查询</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#1565c0;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Entry Name</strong></td><td colspan="3"><code>TdxShare.PBHQInfo</code></td></tr>
+  <tr><td><strong>Server</strong></td><td>TDX Hub</td><td><strong>Status</strong></td><td><span class="status-ok">✅ AVAILABLE</span></td></tr>
+  <tr><td><strong>Endpoint URL</strong></td><td colspan="3"><code>http://tdxhub.icfqs.com:7615/TQLEX?Entry=TdxShare.PBHQInfo</code></td></tr>
+  <tr><td><strong>Method</strong></td><td>POST</td><td><strong>Auth Required</strong></td><td>No (public endpoint)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#1565c0;">📤 Request Body Format</th></tr>
+  <tr><td colspan="2"><div class="code-block">{
+  "Head": {
+    "Target": "0",        // 0=沪深, 1=其他
+    "CharSet": "UTF8"
+  },
+  "Code": "000001",       // 股票代码
+  "Setcode": "0",         // 0=深市, 1=沪市
+  "HasHQInfo": "1",       // 1=返回行情数据
+  "HasExtInfo": "0"       // 1=返回扩展信息
+}</div></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#1565c0;">📥 Response Data Structure (35 fields)</th></tr>
+  <tr><th width="250">Field Path</th><th width="80">Type</th><th width="150">Example Value</th><th>Description (Chinese)</th></tr>
+  
+  <tr><td class="field-path">HQInfo.HQDate</td><td class="type-string">string</td><td>"20260522"</td><td>行情日期 (YYYYMMDD)</td></tr>
+  <tr><td class="field-path">HQInfo.HQTime</td><td class="type-string">string</td><td>"153309"</td><td>行情时间 (HHmmss)</td></tr>
+  <tr><td class="field-path">HQInfo.ItemNum</td><td class="type-string">string</td><td>"4438"</td><td>市场交易股票总数</td></tr>
+  <tr><td class="field-path">HQInfo.Close</td><td class="type-number">number</td><td>10.70</td><td>收盘价 (元)</td></tr>
+  <tr><td class="field-path">HQInfo.Open</td><td class="type-number">number</td><td>10.70</td><td>开盘价 (元)</td></tr>
+  <tr><td class="field-path">HQInfo.MaxP</td><td class="type-number">number</td><td>10.73</td><td>最高价 (元)</td></tr>
+  <tr><td class="field-path">HQInfo.MinP</td><td class="type-number">number</td><td>10.65</td><td>最低价 (元)</td></tr>
+  <tr><td class="field-path">HQInfo.Now</td><td class="type-number">number</td><td>10.68</td><td>最新价/现价 (元)</td></tr>
+  <tr><td class="field-path">HQInfo.Volume</td><td class="type-string">string</td><td>"954132"</td><td>成交量 (手)</td></tr>
+  <tr><td class="field-path">HQInfo.Amount</td><td class="type-number">number</td><td>1020057090</td><td>成交额 (元，需除以AmoUnit)</td></tr>
+  <tr><td class="field-path">HQInfo.Inside</td><td class="type-string">string</td><td>"511666"</td><td>内盘成交量 (手)</td></tr>
+  <tr><td class="field-path">HQInfo.Outside</td><td class="type-string">string</td><td>"442467"</td><td>外盘成交量 (手)</td></tr>
+  <tr><td class="field-path">HQInfo.InOutFlag</td><td class="type-number">number</td><td>2</td><td>内外盘标志 (1=外>内, 2=内>外)</td></tr>
+  <tr><td class="field-path">HQInfo.Yield</td><td class="type-number">number</td><td>5.17</td><td>涨跌幅 (%)</td></tr>
+  <tr><td class="field-path">HQInfo.CJBS</td><td class="type-string">string</td><td>"60741"</td><td>成交笔数</td></tr>
+  <tr><td class="field-path">HQInfo.LB</td><td class="type-number">number</td><td>1.06428659</td><td>量比</td></tr>
+  <tr><td class="field-path">HQInfo.HSL</td><td class="type-number">number</td><td>0.491678655</td><td>换手率 (%)</td></tr>
+  <tr><td class="field-path">HQInfo.Average</td><td class="type-number">number</td><td>10.6909351</td><td>均价 (元)</td></tr>
+  <tr><td class="field-path">HQInfo.RestVol</td><td class="type-string">string</td><td>"73"</td><td>剩余量/委量</td></tr>
+  
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.Code</td><td class="type-string">string</td><td>"000001"</td><td>股票代码</td></tr>
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.Name</td><td class="type-string">string</td><td>"平安银行"</td><td>股票名称</td></tr>
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.XSFlag</td><td class="type-number">number</td><td>2</td><td>显示标志 (2=正常显示)</td></tr>
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.OpenStatus</td><td class="type-number">number</td><td>5</td><td>开盘状态 (5=已开盘)</td></tr>
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.AmoUnit</td><td class="type-number">number</td><td>1</td><td>金额单位 (1=元)</td></tr>
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.VolBase</td><td class="type-number">number</td><td>3735</td><td>成交量基准</td></tr>
+  <tr style="background:#e3f2fd;"><td class="field-path">BaseInfo.Unit</td><td class="type-number">number</td><td>100</td><td>每手股数 (A股=100)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#1565c0;">💡 Usage Tips</th></tr>
+  <tr><td colspan="2">
+    • 成交额实际值 = Amount / AmoUnit<br>
+    • 内外盘判断: InOutFlag=1 表示外盘大于内盘(买方强)<br>
+    • 换手率 = Volume / 流通股本 × 100%<br>
+    • Setcode: 0=深交所(SZ), 1=上交所(SH), 2=北交所(BJ)
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- TOOL 2: tdx_kline -->
+<!-- ============================================================ -->
+<h2 id="tool2">Tool #2: <span class="tool-id">tdx_kline</span> — K线历史数据</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#2e7d32;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Entry Name</strong></td><td colspan="3"><code>TdxShare.PBFXT</code></td></tr>
+  <tr><td><strong>Server</strong></td><td>TDX Hub</td><td><strong>Status</strong></td><td><span class="status-ok">✅ AVAILABLE</span></td></tr>
+  <tr><td><strong>Endpoint URL</strong></td><td colspan="3"><code>http://tdxhub.icfqs.com:7615/TQLEX?Entry=TdxShare.PBFXT</code></td></tr>
+  <tr><td><strong>Method</strong></td><td>POST</td><td><strong>Auth Required</strong></td><td>No (public endpoint)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#2e7d32;">📤 Request Body Format</th></tr>
+  <tr><td colspan="2"><div class="code-block">{
+  "Head": {
+    "Target": 0,
+    "CharSet": "UTF8"
+  },
+  "Code": "000001",       // 股票代码
+  "Setcode": 0,           // 0=深市, 1=沪市
+  "Period": 4,            // K线周期 (见下表)
+  "Startxh": 0,           // 起始序号(0=最新)
+  "WantNum": 5,           // 请求数量
+  "TQFlag": 11            // 复权标志 (11=前复权)
+}</div></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#2e7d32;">⚙️ Period 参数说明</th></tr>
+  <tr><th>Period Value</th><th>K线周期</th><th>Period Value</th><th>K线周期</th></tr>
+  <tr><td>4</td><td>日K (Day)</td><td>5</td><td>周K (Week)</td></tr>
+  <tr><td>6</td><td>月K (Month)</td><td>7</td><td>年K (Year)</td></tr>
+  <tr><td>8</td><td>1分钟 (1min)</td><td>9</td><td>5分钟 (5min)</td></tr>
+  <tr><td>10</td><td>15分钟 (15min)</td><td>11</td><td>30分钟 (30min)</td></tr>
+  <tr><td>12</td><td>60分钟 (60min)</td><td>13</td><td>季K (Quarter)</td></tr>
+  <tr><td>14</td><td>半年K (Half Year)</td><td>16</td><td>120分钟 (2hr)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#2e7d32;">📥 Response Data Structure</th></tr>
+  <tr><th width="200">Field Path</th><th width="70">Type</th><th width="180">Example</th><th>Description</th></tr>
+  
+  <tr><td class="field-path">Code</td><td class="type-string">string</td><td>"000001"</td><td>请求的股票代码</td></tr>
+  <tr><td class="field-path">Period</td><td class="type-number">number</td><td>4</td><td>K线周期 (对应请求参数)</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[0]</td><td class="type-string">string</td><td>"Data"</td><td>日期列名</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[1]</td><td class="type-string">string</td><td>"Second"</td><td>时间(分钟级有值)</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[2]</td><td class="type-string">string</td><td>"Open"</td><td>开盘价</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[3]</td><td class="type-string">string</td><td>"High"</td><td>最高价</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[4]</td><td class="type-string">string</td><td>"Low"</td><td>最低价</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[5]</td><td class="type-string">string</td><td>"Close"</td><td>收盘价</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[6]</td><td class="type-string">string</td><td>"Amount"</td><td>成交额</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[7]</td><td class="type-string">string</td><td>"VolInStock"</td><td>成交额(复权后)</td></tr>
+  <tr><td class="field-path">ListHead.ItemHead[8]</td><td class="type-string">string</td><td>"Volume"</td><td>成交量(手)</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[0]</td><td class="type-string">string</td><td>"20260518"</td><td>日期 YYYYMMDD</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[2]</td><td class="type-number">number</td><td>10.96</td><td>Open 开盘价</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[3]</td><td class="type-number">number</td><td>10.97</td><td>High 最高价</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[4]</td><td class="type-number">number</td><td>10.82</td><td>Low 最低价</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[5]</td><td class="type-number">number</td><td>10.86</td><td>Close 收盘价</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[6]</td><td class="type-number">number</td><td>931697152</td><td>Amount 成交额(元)</td></tr>
+  <tr><td class="field-path">ListItem[i].Item[8]</td><td class="type-number">number</td><td>85638160</td><td>Volume 成交量(手)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#2e7d32;">💡 Usage Tips</th></tr>
+  <tr><td colspan="2">
+    • 数据按时间倒序排列 (最新的在前)<br>
+    • TQFlag复权: 0=不复权, 9=后复权, 11=前复权<br>
+    • Startxh=0 表示从最新的开始取<br>
+    • 分钟级K线 Item[1] 为具体时间
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- TOOL 3: tdx_lookup_stock -->
+<!-- ============================================================ -->
+<h2 id="tool3">Tool #3: <span class="tool-id">tdx_lookup_stock</span> — 股票RAG检索</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#7b1fa2;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Entry Name</strong></td><td colspan="3"><code>rag-entity-retrieve</code></td></tr>
+  <tr><td><strong>Server</strong></td><td>AI RAG</td><td><strong>Status</strong></td><td><span class="status-ok">✅ AVAILABLE</span></td></tr>
+  <tr><td><strong>Endpoint URL</strong></td><td colspan="3"><code>https://ai.icfqs.com:8965/v1/rag-entity-retrieve</code></td></tr>
+  <tr><td><strong>Method</strong></td><td>POST</td><td><strong>Auth Required</strong></td><td>Yes (via header)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#7b1fa2;">📤 Request Body Format</th></tr>
+  <tr><td colspan="2"><div class="code-block">{
+  "query": "平安银行",     // 搜索关键词 (股票名/代码/拼音/简拼)
+  "range": "AG"            // 范围: AG=A股全部, 可选其他范围
+}</div></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#7b1fa2;">📥 Response Data Structure</th></tr>
+  <tr><th width="220">Field Path</th><th width="70">Type</th><th width="160">Example</th><th>Description</th></tr>
+  
+  <tr><td class="field-path">query</td><td class="type-string">string</td><td>"平安银行"</td><td>原始搜索词</td></tr>
+  <tr><td class="field-path">retrieval_count</td><td class="type-number">number</td><td>10</td><td>返回结果数量</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].entity_code</td><td class="type-string">string</td><td>"000001"</td><td>证券代码</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].entity_name</td><td class="type-string">string</td><td>"平安银行"</td><td>证券名称</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].entity_type</td><td class="type-string">string</td><td>"A股代码"</td><td>实体类型 (A股/港股/基金等)</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].entity_setcode</td><td class="type-number">number</td><td>0</td><td>市场代码 (0=深, 1=沪, 31=港...)</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].aliases</td><td class="type-array">Array</td><td>[3 items]</td><td>别名列表 [拼音, 同义词, 全称]</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].aliases[0]</td><td class="type-string">string</td><td>"payh"</td><td>拼音缩写</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].aliases[1]</td><td class="type-string">string</td><td>"深发展A|S深发展A|..."</td><td>曾用名/同义词</td></tr>
+  <tr><td class="field-path">retrieved_entities[i].aliases[2]</td><td class="type-string">string</td><td>"平安银行股份有限公司"</td><td>公司全称</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#7b1fa2;">💡 Usage Tips</th></tr>
+  <tr><td colspan="2">
+    • 支持模糊搜索: 输入"平安"可匹配平安银行、中国平安等<br>
+    • 支持拼音: 输入"payh"可找到平安银行<br>
+    • entity_setcode 常见值: 0=深A, 1=沪A, 31=港股, 33=场内基金, 34=货币基金<br>
+    • 返回最多10条相关结果，按相关性排序
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- TOOL 4: tdx_screener -->
+<!-- ============================================================ -->
+<h2 id="tool4">Tool #4: <span class="tool-id">tdx_screener</span> — 自然语言智能选股</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#c62828;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Entry Name</strong></td><td colspan="3"><code>JNLPSE:wendaQuery</code></td></tr>
+  <tr><td><strong>Server</strong></td><td>TDX Hub</td><td><strong>Status</strong></td><td><span class="status-ok">✅ AVAILABLE</span></td></tr>
+  <tr><td><strong>Endpoint URL</strong></td><td colspan="3"><code>http://tdxhub.icfqs.com:7615/TQLEX?Entry=JNLPSE:wendaQuery</code></td></tr>
+  <tr><td><strong>Method</strong></td><td>POST</td><td><strong>Auth Required</strong></td><td>Yes (recommended)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#c62828;">📤 Request Body Format</th></tr>
+  <tr><td colspan="2"><div class="code-block">[{
+  "message": "涨停",      // 自然语言选股条件
+  "rang": "AG",           // 范围: AG=A股
+  "pageNo": "1",          // 页码
+  "pageSize": "5"         // 每页数量 (最大建议50)
+}]</div></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#c62828;">📥 Response Data Structure (Table Format)</th></tr>
+  <tr><th width="230">Column Index</th><th width="140">Column Name</th><th width="120">Example</th><th>Description</th></tr>
+  
+  <tr><td>[0]</td><td>POS</td><td>"1", "2"...</td><td>序号</td></tr>
+  <tr><td>[1]</td><td>market</td><td>"0"</td><td>市场 (0=深, 1=沪)</td></tr>
+  <tr><td>[2]</td><td>sec_code</td><td>"002938"</td><td>股票代码</td></tr>
+  <tr><td>[3]</td><td>sec_name</td><td>"鹏鼎控股"</td><td>股票名称</td></tr>
+  <tr><td>[4]</td><td>now_price</td><td>"103.93"</td><td>当前价格</td></tr>
+  <tr><td>[5]</td><td>chg</td><td>"10.00"</td><td>涨跌幅(%)</td></tr>
+  <tr><td>[6]</td><td>发生日期</td><td>"2026.05.22"</td><td>事件发生日期</td></tr>
+  <tr><td>[7]</td><td>封单金额0#</td><td>"684025700.00"</td><td>涨停封单金额(元)</td></tr>
+  <tr><td>[8]</td><td>首次涨停时间</td><td>"09:30:00"</td><td>首次触及涨停时间</td></tr>
+  <tr><td>[9]</td><td>最近涨停时间</td><td>"09:30:00"</td><td>最近一次涨停时间</td></tr>
+  <tr><td>[10]</td><td>涨停打开次数</td><td>"0"</td><td>涨停板被打开次数</td></tr>
+  <tr><td>[11]</td><td>涨停原因</td><td>"商业航天.无人驾驶.PCB概念"</td><td>涨停原因标签</td></tr>
+  <tr><td>[12]</td><td>连续涨停天数</td><td>"1"</td><td>连续涨停天数</td></tr>
+  <tr><td>[13]</td><td>几天</td><td>"1"</td><td>统计天数</td></tr>
+  <tr><td>[14]</td><td>几板</td><td>"1"</td><td>第几板</td></tr>
+  <tr><td>[15]</td><td>原因揭秘</td><td>(长文本)</td><td>详细原因分析</td></tr>
+  <tr><td>[16]</td><td>板型</td><td>"换手板(涨停)"</td><td>涨停板类型</td></tr>
+  <tr><td>[17]</td><td>涨停成交额(万)</td><td>"129554.98"</td><td>涨停时成交额(万元)</td></tr>
+  <tr><td>[18]</td><td>涨停最大封单额(万)</td><td>"262359.88"</td><td>最大封单额(万元)</td></tr>
+  <tr><td>[19]</td><td>封成比</td><td>"44.7911"</td><td>封单/成交比例</td></tr>
+  <tr><td>[20]</td><td>封单量</td><td>"6581600.00"</td><td>封单量(股)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#c62828;">💡 Usage Tips & Example Queries</th></tr>
+  <tr><td colspan="2">
+    <strong>常用自然语言条件示例:</strong><br>
+    • "涨幅超过5%" → 筛选当日涨幅>5%的股票<br>
+    • "小盘低价" → 筛选市值小、股价低的股票<br>
+    • "北向资金增持" → 筛选外资近期买入的股票<br>
+    • "业绩预增" → 筛选预告业绩增长的股票<br>
+    • "连续三天上涨" → 筛选三连阳的股票<br>
+    <br>
+    <strong>返回格式说明:</strong><br>
+    • 返回数组: [0]=状态头, [1]=列定义, [2]=样式, [3+]=数据行<br>
+    • 实际数据从索引 3 开始
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- TOOL 5: tdx_indicator_select -->
+<!-- ============================================================ -->
+<h2 id="tool5">Tool #5: <span class="tool-id">tdx_indicator_select</span> — 金融指标查询</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#e65100;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Entry Name</strong></td><td colspan="3"><code>NLPSE:InfoSelectV2</code></td></tr>
+  <tr><td><strong>Server</strong></td><td>TDX Hub</td><td><strong>Status</strong></td><td><span class="status-ok">✅ AVAILABLE</span></td></tr>
+  <tr><td><strong>Endpoint URL</strong></td><td colspan="3"><code>http://tdxhub.icfqs.com:7615/TQLEX?Entry=NLPSE:InfoSelectV2</code></td></tr>
+  <tr><td><strong>Method</strong></td><td>POST</td><td><strong>Auth Required</strong></td><td>Yes (recommended)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#e65100;">📤 Request Body Format</th></tr>
+  <tr><td colspan="2"><div class="code-block">{
+  "message": "平安银行基本面指标",   // 自然语言查询
+  "rang": "AG"                       // 范围
+}</div></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#e65100;">📥 Response Data Structure</th></tr>
+  <tr><th width="260">Field Path</th><th width="70">Type</th><th width="130">Example</th><th>Description</th></tr>
+  
+  <tr><td class="field-path">[0].market</td><td class="type-number">number</td><td>0</td><td>市场 (0=深)</td></tr>
+  <tr><td class="field-path">[0].code</td><td class="type-string">string</td><td>"000001"</td><td>股票代码</td></tr>
+  <tr><td class="field-path">[0].sec_name</td><td class="type-string">string</td><td>"平安银行"</td><td>股票名称</td></tr>
+  <tr><td class="field-path">[0].基本每股收益(...)</td><td class="type-string">string</td><td>"0.670000"</td><td>动态指标值 (key为指标全称)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#e65100;">💡 Usage Tips</th></tr>
+  <tr><td colspan="2">
+    • 使用自然语言描述需要的指标<br>
+    • 返回的 key 是完整指标名称，包含报告期和报表类型<br>
+    • value 通常为字符串格式的数字<br>
+    • 常用查询词: "PE/PB", "ROE", "毛利率", "净利润增长率"<br>
+    • 响应较慢 (~1.3s)，适合低频调用
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- TOOL 6-8: Wenda Series -->
+<!-- ============================================================ -->
+<h2 id="tool6">Tools #6-8: Wenda 问达平台系列 (新闻/研报/公告)</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#455a64;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Tool ID</strong></td><td colspan="3"><code>wenda_news_query</code> / <code>wenda_report_query</code> / <code>wenda_notice_query</code></td></tr>
+  <tr><td><strong>Server</strong></td><td>Wenda Platform</td><td><strong>Status</strong></td><td><span class="status-warn">⚠️ NEEDS LOGIN</span></td></tr>
+  <tr><td><strong>Base URL</strong></td><td colspan="3"><code>https://www.tdx.com.cn/wenda/api/tools/</code></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#455a64;">🔗 Endpoints & Current Status</th></tr>
+  <tr><th width="150">Tool</th><th width="200">Entry</th><th width="100">Response Code</th><th>Note</th></tr>
+  <tr>
+    <td><span class="tool-id">wenda_news_query</span></td>
+    <td><code>/zx_query</code></td>
+    <td><span class="status-warn">401 need login</span></td>
+    <td>需要额外登录认证</td>
+  </tr>
+  <tr>
+    <td><span class="tool-id">wenda_report_query</span></td>
+    <td><code>/yb_query</code></td>
+    <td><span class="status-warn">401 need login</span></td>
+    <td>需要额外登录认证</td>
+  </tr>
+  <tr>
+    <td><span class="tool-id">wenda_notice_query</span></td>
+    <td><code>/gg_search</code></td>
+    <td><span class="status-warn">401 need login</span></td>
+    <td>需要额外登录认证</td>
+  </tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#455a64;">📤 Request Format (Expected)</th></tr>
+  <tr><td colspan="4"><div class="code-block">// News Search
+{ "query": "低空经济政策" }
+
+// Report Search
+{ "query": "宁德时代" }
+
+// Notice Search
+{ "query": "分红" }</div></td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#455a64;">📥 Expected Response (After Login)</th></tr>
+  <tr><td colspan="2">
+    预期返回结构 (基于Wenda平台标准):<br>
+    • code: 200 (成功) 或错误码<br>
+    • data: 包含新闻/研报/公告列表<br>
+    • 每项包含: title(标题), content(内容), date(日期), source(来源) 等<br>
+    <br>
+    <strong>当前返回 (未登录):</strong><br>
+    { "code": 401, "msg": "need login", "data": "https://pul.tdx.com.cn" }
+  </td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#455a64;">💡 How to Fix?</th></tr>
+  <tr><td colspan="2">
+    当前 Token 仅支持 TDX Hub 认证，Wenda 平台需要独立的登录会话。<br>
+    可能需要在浏览器中先登录 https://pul.tdx.com.cn 获取 session cookie。<br>
+    或联系通达信获取包含 Wenda 权限的高级 Token。
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- TOOL 9: tdx_api_data (F10) -->
+<!-- ============================================================ -->
+<h2 id="tool9">Tool #9: <span class="tool-id">tdx_api_data</span> — F10基本面统一接口</h2>
+
+<table>
+  <tr><th colspan="4" style="background:#5d4037;">📍 Basic Information</th></tr>
+  <tr><td width="120"><strong>Entry Pattern</strong></td><td colspan="3"><code>TdxSharePCCW.tdxf10_*</code> (多模块)</td></tr>
+  <tr><td><strong>Server</strong></td><td>TDX Hub</td><td><strong>Status</strong></td><td><span class="status-ok">✅ PARTIAL (5/35 available)</span></td></tr>
+  <tr><td><strong>Endpoint URL</strong></td><td colspan="3"><code>http://tdxhub.icfqs.com:7615/TQLEX?Entry=TdxSharePCCW.{module_name}</code></td></tr>
+  <tr><td><strong>Method</strong></td><td>POST</td><td><strong>Auth Required</strong></td><td>Yes (module-level permission)</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#5d4037;">✅ Available F10 Modules (with Token)</th></tr>
+  <tr><th width="300">Module Entry</th><th width="120">fixedTag</th><th width="100">Data Type</th><th>Description</th></tr>
+  <tr>
+    <td><code>TdxSharePCCW.tdxf10_gg_ybpj</code></td>
+    <td>"yzyq"</td>
+    <td>ResultSets[4]</td>
+    <td>盈利预测/一致预期 (含分析师EPS预测)</td>
+  </tr>
+  <tr>
+    <td><code>TdxSharePCCW.tdxf10_gg_ybpj</code></td>
+    <td>"yjyg"</td>
+    <td>ResultSets[1]</td>
+    <td>业绩预告</td>
+  </tr>
+  <tr>
+    <td><code>TdxSharePCCW.tdxf10_gg_rdtc</code></td>
+    <td>"zttzbkz"</td>
+    <td>ResultSets[1]</td>
+    <td>热点题材-板块族谱 (概念映射)</td>
+  </tr>
+  <tr>
+    <td><code>TdxSharePCCW.tdxf10_gg_rdtc</code></td>
+    <td>"sjcd"</td>
+    <td>ResultSets[1]</td>
+    <td>事件驱动-催化事件列表</td>
+  </tr>
+  <tr>
+    <td><code>TdxSharePCCW.tdxf10_gg_rdtc</code></td>
+    <td>"rdtm"</td>
+    <td>ResultSets[1]</td>
+    <td>热点题材-主题库</td>
+  </tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#5d4037;">📥 F10 Response Structure (Standard Format)</th></tr>
+  <tr><th width="240">Field Path</th><th width="70">Type</th><th width="150">Example</th><th>Description</th></tr>
+  
+  <tr><td class="field-path">HitCache</td><td class="type-string">string</td><td>"L2:8dff511cdb2b"</td><td>缓存命中标识</td></tr>
+  <tr><td class="field-path">ErrorCode</td><td class="type-number">number</td><td>0</td><td>0=成功, 非0=错误</td></tr>
+  <tr><td class="field-path">ResultSets</td><td class="type-array">Array[N]</td><td>[4 objects]</td><td>结果集数组 (多张表)</td></tr>
+  <tr style="background:#efebe9;">
+    <td class="field-path">ResultSets[i].Count</td><td class="type-number">number</td><td>1 / 5 / 28...</td><td>该表行数</td>
+  </tr>
+  <tr style="background:#efebe9;">
+    <td class="field-path">ResultSets[i].ResultSetKey</td><td class="type-string">string</td><td>"table0"</td><td>表标识符</td>
+  </tr>
+  <tr style="background:#efebe9;">
+    <td class="field-path">ResultSets[i].ColName</td><td class="type-array">Array</td><td>[9 strings]</td><td>列名数组</td>
+  </tr>
+  <tr style="background:#efebe9;">
+    <td class="field-path">ResultSets[i].Content</td><td class="type-array">Array</td><td>[rows][cols]</td><td>二维数据数组</td>
+  </tr>
+  <tr><td class="field-path">hitCache</td><td class="type-boolean">boolean</td><td>true</td><td>是否命中缓存</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="4" style="background:#5d4037;">📊 Example: ybpj (盈利预测) Table Details</th></tr>
+  <tr><th>Table</th><th>ColName (Columns)</th><th>Data Description</th></tr>
+  <tr><td>table0</td><td>defdate, mxdef, T003, T005, T024, T025, T031-T033</td><td>预测概览: 报告日, 最新日, EPS预测, PE, 目标价等</td></tr>
+  <tr><td>table1</td><td>T026, T030, T005, T006, T007</td><td>历史预测记录: 序号, 日期, 最低EPS, 一致EPS, 最高EPS</td></tr>
+  <tr><td>table2</td><td>EndDate, AdjustingFactor, AdjustingConst</td><td>复权因子: 日期, 复权因子, 复权常数</td></tr>
+  <tr><td>table3</td><td>(varies by module)</td><td>扩展数据</td></tr>
+</table>
+
+<table>
+  <tr><th colspan="2" style="background:#5d4037;">❌ Unavailable Modules (E|-7202 功能未注册)</th></tr>
+  <tr><td colspan="2">
+    以下模块返回 E|-7202 错误，需要联系通达信开通:<br>
+    • tdxf10_gg_cwbb (财务报表: cwbb_zb/lrb/fzb/llb/gjjz)<br>
+    • tdxf10_gg_gbxx (股本结构: gbxx_jb/bg/xsjs)<br>
+    • tdxf10_gg_fhfx (分红融资)<br>
+    • tdxf10_gg_gsgk (公司基本信息: -1005参数错误)<br>
+    • tdxf10_gg_gdyj (股东研究: -1005参数错误)<br>
+    • tdxf10_gg_jyds (龙虎榜: -1005参数错误)<br>
+    • 以及其他 17 个模块...
+  </td></tr>
+</table>
+
+
+<!-- ============================================================ -->
+<!-- QUICK REFERENCE TABLE -->
+<!-- ============================================================ -->
+<h2 id="quickref">📋 Quick Reference Card</h2>
+
+<table>
+  <tr>
+    <th>#</th>
+    <th>Tool ID</th>
+    <th>Name</th>
+    <th>Entry</th>
+    <th>Server</th>
+    <th>Status</th>
+    <th>Key Fields Count</th>
+    <th>Avg Time</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td class="tool-id">tdx_quotes</td>
+    <td>实时行情</td>
+    <td>TdxShare.PBHQInfo</td>
+    <td>TDX Hub</td>
+    <td><span class="status-ok">OK</span></td>
+    <td>35 fields</td>
+    <td>~260ms</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td class="tool-id">tdx_kline</td>
+    <td>K线数据</td>
+    <td>TdxShare.PBFXT</td>
+    <td>TDX Hub</td>
+    <td><span class="status-ok">OK</span></td>
+    <td>12 cols × N rows</td>
+    <td>~92ms ⚡</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td class="tool-id">tdx_lookup_stock</td>
+    <td>RAG检索</td>
+    <td>rag-entity-retrieve</td>
+    <td>AI RAG</td>
+    <td><span class="status-ok">OK</span></td>
+    <td>8 fields</td>
+    <td>~259ms</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td class="tool-id">tdx_screener</td>
+    <td>智能选股</td>
+    <td>JNLPSE:wendaQuery</td>
+    <td>TDX Hub</td>
+    <td><span class="status-ok">OK</span></td>
+    <td>21 columns</td>
+    <td>~214ms</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td class="tool-id">tdx_indicator_select</td>
+    <td>金融指标</td>
+    <td>NLPSE:InfoSelectV2</td>
+    <td>TDX Hub</td>
+    <td><span class="status-ok">OK</span></td>
+    <td>dynamic keys</td>
+    <td>~1298ms</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td class="tool-id">wenda_news_query</td>
+    <td>新闻搜索</td>
+    <td>zx_query</td>
+    <td>Wenda</td>
+    <td><span class="status-warn">401</span></td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td class="tool-id">wenda_report_query</td>
+    <td>研报搜索</td>
+    <td>yb_query</td>
+    <td>Wenda</td>
+    <td><span class="status-warn">401</span></td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td class="tool-id">wenda_notice_query</td>
+    <td>公告搜索</td>
+    <td>gg_search</td>
+    <td>Wenda</td>
+    <td><span class="status-warn">401</span></td>
+    <td>-</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td class="tool-id">tdx_api_data</td>
+    <td>F10基本面</td>
+    <td>tdxf10_* (35 modules)</td>
+    <td>TDX Hub</td>
+    <td><span class="status-ok">Partial</span></td>
+    <td>5/35 OK</td>
+    <td>~100ms</td>
+  </tr>
+</table>
+
+<hr>
+<p style="text-align:center; color:#666; font-size:12px;">
+  Generated by TDX Finance MCP Plugin API Reference Collector v2026.4.28<br>
+  Open this file in Excel for best viewing (Data → From Web/Text) or use as HTML reference.
+</p>
+
+<script>
+document.getElementById('genTime').textContent = new Date().toLocaleString('zh-CN');
+</script>
+
+</body>
+</html>
