@@ -1,5 +1,15 @@
 # TDX Finance MCP Plugin
+🎯请转移到新版本V3版仓库，原有仓库的可用性进行了再次升级。
 
+🎯https://github.com/adambbhe/TDX-finance-mcp-plugin-v3.git
+
+🎯TDX Finance MCP Plugin v3 是一个为 OpenClaw 平台设计的金融数据服务插件，提供通达信（TDX）A 股金融数据接口的统一访问能力。 本插件封装了 6 个经过验证的核心工具，并内置 45 个专业投资分析技能，覆盖 A 股实时行情、K线、F10 基本面、智能选股、指标筛选与代码检索等需求。
+
+🎯v3 与旧版的区别
+
+v3 是在 v2 基础上的清理与精简版本，主要变更（详见 CHANGELOG.md）： 移除了 4 个依赖问达（Wenda）平台、长期返回 401 need login 的失效工具（wenda_news_query / wenda_report_query / wenda_notice_query / wenda_macro_query）。这些功能已在技能层迁移至 F10 模块，旧工具不再需要。 清除了此前散落在多个脚本与文档中的硬编码 API Token 与认证密钥。 删除了仓库内的调试 / 抓取 Cookie / 重复扫描脚本，只保留可发布的插件资产。 统一了版本号、仓库地址与技能数量等元数据。
+
+现在工具层、清单（openclaw.plugin.json）与文档三者完全一致：6 个工具，全部可用。
 <p align="center">
   <strong>通达信金融数据服务 MCP 插件</strong><br>
   <em>TDX (TongDaXin) Finance Data Service Model Context Protocol Plugin</em>
